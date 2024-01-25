@@ -2,6 +2,31 @@ import numpy as np
 import scipy as sp
 
 
+def pde_explicit(f,nx,nt,lx,lt,N):
+    hx=lx/nx
+    ht=lt/nt
+    a = ht/(pow(hx,2))
+    V0,V1 = [0],[0]
+    for i in range(nx+1):
+        V1.append(0)
+    for i in range(nx+1):
+        V0.append(f(i*hx))
+    for j in range(N):
+        for i in range(nx+1):
+            if i==0:
+                V1[i]=(1-2*a)*V0[i] + (a*V0[i+1])
+            elif i==nx:
+                V1[i]=(a*V0[i-1]) + (1-2*a)*V0[i]
+            else:
+                V1[i]=(a*V0[i-1]) + (1-2*a)*V0[i] + (a*V0[i+1])
+        for i in range(nx+1):
+            V0[i] = V1[i]        
+    if N==0:
+        return V0
+    else:
+        return V1
+
+
 
 
 def gen_RK4_coupled(fnlist,x0,y0s,limit,h):
