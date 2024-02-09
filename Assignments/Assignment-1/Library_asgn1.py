@@ -6,7 +6,7 @@ from scipy.optimize import root
 #####################################################################################
 #                            Solving Non-Linear Equations                            
 #####################################################################################    
-class Solve_Non_Linear_Equation:
+class Solve_Non_Linear_Equation_1D:
     def __init__(self,f,df,a0,b0,tol):
         self.f = f
         self.a0= a0
@@ -26,7 +26,7 @@ class Solve_Non_Linear_Equation:
         b=self.b0
         fn=self.f
         epsilon=self.tol
-        a,b=Solve_Non_Linear_Equation.bracket(a,b,fn)
+        a,b=Solve_Non_Linear_Equation_1D.bracket(a,b,fn)
         count=0
         while (abs(b-a))>epsilon:
             c=(a+b)/2
@@ -55,7 +55,7 @@ class Solve_Non_Linear_Equation:
                 step+=1
         return x2,step 
     
-    def fixed_point_single(self,x0):
+    def fixed_point(self,x0):
         g=self.f
         tol=self.tol
         x1=g(x0)
@@ -68,35 +68,7 @@ class Solve_Non_Linear_Equation:
                 x0=x1
                 x1=g(x0)
                 step+=1
-        return x1,step    
-    
-    def fixed_point_multi(self,glist,x0list):
-        tol=self.tol
-        if len(glist)!=len(x0list):
-            raise IndexError("The number of functions and initial guesses are not equal")
-        else:
-            for i in range(len(glist)):
-                x0list[i] = (glist[i](x0list))
-            step=1
-            flag=1
-            while flag==1:
-                if step>100:
-                    print("The roots are not converging")
-                    return x0list,step
-                else:
-                    temp = x0list[:]
-
-                    for i in range(len(glist)):
-                        x0list[i] = (glist[i](x0list))
-                    step+=1
-
-                for j in range(len(x0list)):
-                    if abs(temp[j] - x0list[j]) / x0list[j] < tol:
-                        flag = 0
-                    else:
-                        flag = 1
-                        break
-            return x0list,step    
+        return x1,step       
 #####################################################################################
 #####################################################################################
                 
@@ -210,7 +182,7 @@ class Gaussian_Quadrature:
 #####################################################################################
 #                                      Solving ODEs                             
 #####################################################################################
-class ODE_Solve_simple:
+class ODE_Solve_XY:
     def __init__(self, dy, xi,yi,xf,N):
         self.xi = xi
         self.yi = yi
@@ -236,8 +208,21 @@ class ODE_Solve_simple:
         return xlist,ylist        
     
     def backward_euler(self):
-        pass
+        x0=self.xi
+        y0=self.yi
+        xf=self.xf
+        num_points=self.N
+        fn=self.dy
 
+        h = (xf - x0) / num_points
+        x_values = np.linspace(x0, xf, num_points + 1)
+        y_values = np.zeros(num_points + 1)
+        y_values[0] = y0
+
+        for i in range(1, num_points + 1):
+            y_values[i] = y_values[i - 1] + h * fn(x_values[i], y_values[i - 1])
+
+        return x_values, y_values
 
     def predictor_corrector(self):
         dybydx=self.dy
@@ -261,3 +246,54 @@ class ODE_Solve_simple:
             xlist.append(x)
             ylist.append(y)
         return xlist,ylist
+    
+    def RK2_solve(self):
+
+        dybydx=self.dy
+        x0=self.xi
+        y0=self.yi
+        xf=self.xf
+        N=self.N
+
+        h=(xf-x0)/N
+        xlist=[]
+        ylist=[]
+        x=x0
+        y=y0
+        xlist.append(x)
+        ylist.append(y)
+        while x<xf:
+            k1=h*dybydx(x,y)
+            k2=dybydx(x+(h/2),y+(k1/2))*h
+            y=y+k2
+            x=x+h
+            xlist.append(x)
+            ylist.append(y)
+        return xlist,ylist
+    
+    def RK4_solve(self):
+
+        dybydx=self.dy
+        x0=self.xi
+        y0=self.yi
+        x_f=self.xf
+        N=self.N
+
+        h=(x_f-x0)/N
+        xlist=[]
+        ylist=[]
+        x=x0
+        y=y0
+        xlist.append(x)
+        ylist.append(y)
+        while x<x_f:
+            k1=h*dybydx(x,y)
+            k2=h*dybydx(x+(h/2),y+(k1/2))
+            k3=h*dybydx(x+(h/2),y+(k2/2))
+            k4=h*dybydx(x+h,y+k3)
+            y=y+(k1+2*k2+2*k3+k4)/6
+            x=x+h
+            xlist.append(x)
+            ylist.append(y)
+        return xlist,ylist     
+
