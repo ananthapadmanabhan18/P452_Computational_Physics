@@ -1,10 +1,8 @@
 from Library_asgn1 import *
 
-def f1(x):
-    return x**3-2*x-5
+def f(x):
+    return np.sqrt(1+x**4)
 
 
-
-P=Solve_Non_Linear_Equation(f1,2,3,0.000001)
-s=P.bisection()
-print(s)
+p=Gaussian_Quadrature(f,0,1,3)
+print(p.integrate())
