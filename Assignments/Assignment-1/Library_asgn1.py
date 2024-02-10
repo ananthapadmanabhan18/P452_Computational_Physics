@@ -297,3 +297,124 @@ class ODE_Solve_XY:
             ylist.append(y)
         return xlist,ylist     
 
+def semi_implicit_euler_solve(f,g,x0,v0,t0,t_max,step_size):
+    '''
+    Parameters:
+    - f: f(v,t):
+        dx/dt = f(v,t)
+    - g: g(x,t)
+        dv/dt = g(x,t)
+    - x0: initial position: x(t0) = x0
+    - v0: initial velocity: v(t0) = v0
+    - t0: initial time
+    - t_max: final time:
+        The to which the Solution is to be calculated
+    - step: The size of the interval
+    Returns:
+    - xlist: List of x values
+    - vlist: List of v values
+    - tlist: List of t values
+    The function returns a 3-tuple of lists containing the x, v and t values respectively
+    '''
+    h=step_size
+    vlist=[]
+    xlist=[]
+    tlist=[]
+    x=x0
+    v=v0
+    t=t0
+    while t<=t_max:
+        xlist.append(x)
+        vlist.append(v)
+        tlist.append(t)
+        v=v + (h*g(x,t))
+        x=x + (h*f(v,t))
+        t=t+h
+    return xlist,vlist,tlist    
+
+class verlet_algorithm:
+
+    '''
+    Parameters:
+    - a: a(x)
+        The acceleration function
+    - x0: initial position: x(t0) = x0
+    - v0: initial velocity: v(t0) = v0
+    - t0: initial time
+    - t_max: final time:
+        The to which the Solution is to be calculated
+    - step: The size of the interval
+    Returns:
+    - xlist: List of x values
+    - vlist: List of v values
+    - tlist: List of t values
+    '''
+
+    def __init__(self,a, x0, v0, t0, t_max, step_size):
+        self.a = a
+        self.x0 = x0
+        self.v0 = v0
+        self.t0 = t0
+        self.t_max = t_max
+        self.step_size = step_size
+
+    def verlet_solve(self):
+        #Defining the variables
+        h=self.step_size
+        xlist=[]
+        vlist=[]
+        tlist=[]
+        tm=self.t_max
+        x=self.x0
+        t=self.t0
+        v=self.v0
+        acc_fn=self.a
+
+        #The first 
+        xlist.append(x)
+        vlist.append(v)
+        tlist.append(t)
+        x1=(x)+(h*v)+(0.5*h*h*self.a(x))
+        v1=(x1-x)/h
+        t=t+h
+        xlist.append(x1)
+        vlist.append(v1)
+        tlist.append(t)
+
+        #The rest of the steps
+        while t<=tm:
+            x2=(2*x1)-(x)+(h*h*acc_fn(x1))
+            v=(x2-x)/(2*h)
+            x=x1
+            x1=x2
+            t=t+h
+            xlist.append(x)
+            vlist.append(v)
+            tlist.append(t)
+
+        return xlist,vlist,tlist    
+
+    def velocity_verlet(self):
+        
+        h=self.step_size
+        x=self.x0
+        v=self.v0
+        t=self.t0
+
+        xlist=[x]
+        vlist=[v]
+        tlist=[t]
+        pass
+
+#####################################################################################
+#                                      Solving PDEs                             
+#####################################################################################
+
+
+
+
+
+
+
+
+
