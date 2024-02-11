@@ -80,7 +80,7 @@ class Matrix_Operations:
     def multiply(self,B1):
 
         '''
-        
+        The function multiplies two matrices A and B and the result is BA
         '''
         A1=self.matrix_copy(B1)
         del B1
@@ -507,7 +507,7 @@ class verlet_algorithm:
 #####################################################################################
 #                                      Solving PDEs                             
 #####################################################################################
-def Explicit_solve_uxx_ut(g,a,b,L,T):
+def Explicit_solve_uxx_ut(g,a,b,L,T,nx,nt): #incomplete
     '''
     This function solves the 1D heat equation using the explicit method
     the equation is given as:
@@ -521,9 +521,45 @@ def Explicit_solve_uxx_ut(g,a,b,L,T):
         The boundary condition for time when x=L
     - L: The limit of the position
     - T: The limit of the time
+    - nx: The number of intervals in the position
+    - nt: The number of intervals in the time
     Returns:
+    - V: List of u values at time T
+    - xlist: List of x values
     '''
-    pass
+    hx=L/nx
+    ht=T/nt
+    alpha=ht/(hx*hx)
+    if alpha>0.5:
+        print("hx=",hx)
+        print("ht=",ht)
+        raise ValueError(r" alpha > 0.5 (should be less than 0.5)")
+    else:
+        A = [[0 for i in range(nx)] for j in range(nx)]
+        for i in range(nx):
+            A[i][i]=1-(2*alpha)
+            if i!=0:
+                A[i][i-1]=alpha
+            if i!=(nx-1):
+                A[i][i+1]=alpha
+        V=[]        
+        # V=[[g((L/nx)*i)] for i in range(nx)]
+        for i in range(nx):
+            if i==0:
+                V.append([0])
+            elif i==nx-1:
+                V.append([0])
+            else:    
+                V.append([g((L/nx)*i)])
+        A = np.linalg.matrix_power(A,nt+1)
+        V=np.dot(A,V)
+
+
+        return V        
+
+
+# def Crank-Nicolson(g):
+
 
 
 
