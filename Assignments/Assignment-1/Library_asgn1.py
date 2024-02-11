@@ -4,6 +4,104 @@ import math as math
 from scipy.optimize import root
 
 #####################################################################################
+#                                Matrix Operations                            
+#####################################################################################    
+class Matrix_Operations:
+    '''
+    Parameters:
+    A: Matrix A
+        Matrix is defined as a list of lists
+        for example: A = [
+                        [1,2,3],
+                        [4,5,6],
+                        [7,8,9]
+                        ]
+    '''
+    def __init__(self, A):
+        self.A = A
+
+    def print_matrix(self,B,flag):
+        '''
+        This function prints the matrix A defined in the init function
+        if flag=1, it prints the matrix B
+
+        '''
+        if flag==1:
+            for row in B:
+                for element in row:
+                    print("\t",element, end="\t")
+                print()
+        elif flag==0:       
+            for row in self.A:
+                for element in row:
+                    print("\t",element, end="\t")
+                print()
+        else:
+            raise ValueError("The flag should be 0 or 1")        
+
+
+    def matrix_copy(self,A1):
+        '''
+        This function returns a copy of the matrix A
+        '''
+        for i in range(len(A1)):
+            A1[i]=A1[i][:]
+        return A1    
+
+
+
+    def add(self,B1):
+        '''
+        This function adds two matrices A and B
+        A is defined in the init function
+        B is the parameter of this function
+        '''
+        A1=self.matrix_copy(self.A)
+        if len(A1)!=len(B1) or len(A1[0])!=len(B1[0]):
+            raise ValueError("The matrices are not of the same order")
+        elif():
+            pass
+        else:
+            for i in range(len(A1)):
+                for j in range(len(A1[0])):
+                    A1[i][j]=A1[i][j]+B1[i][j]
+            return A1
+        
+    def multiply_by_scalar(self,scalar):
+        '''
+        The function multiplies a matrix by a scalar
+        '''
+        A1=self.matrix_copy(self.A)
+        for i in range(len(A1)):
+            for j in range(len(A1[0])):
+                A1[i][j]=A1[i][j]*scalar
+        return A1    
+        
+    def multiply(self,B1):
+
+        '''
+        
+        '''
+        A1=self.matrix_copy(B1)
+        del B1
+        B1=self.matrix_copy(self.A)
+        if len(A1[0])!=len(B1):
+            raise ValueError("Length of the columns of A should be equal to the length of the rows of B")
+        else:
+            result=[]
+            for i in range(len(A1)):
+                row=[]
+                for j in range(len(B1[0])):
+                    sum=0
+                    for k in range(len(A1[0])):
+                        sum+=A1[i][k]*B1[k][j]
+                    row.append(sum)
+                result.append(row)
+            return result
+
+
+
+#####################################################################################
 #                            Solving Non-Linear Equations                            
 #####################################################################################    
 class Solve_Non_Linear_Equation_1D:
@@ -409,7 +507,23 @@ class verlet_algorithm:
 #####################################################################################
 #                                      Solving PDEs                             
 #####################################################################################
-
+def Explicit_solve_uxx_ut(g,a,b,L,T):
+    '''
+    This function solves the 1D heat equation using the explicit method
+    the equation is given as:
+    u_t = u_xx
+    Parameters:
+    - g: g(x) = u(x,0)
+        The initial condition for position when t=0
+    - a: a(t) = u(0,t)
+        The initial condition for time when x=0
+    - b: b(t) = u(L,t)
+        The boundary condition for time when x=L
+    - L: The limit of the position
+    - T: The limit of the time
+    Returns:
+    '''
+    pass
 
 
 
