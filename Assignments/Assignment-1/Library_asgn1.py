@@ -507,55 +507,84 @@ class verlet_algorithm:
 #####################################################################################
 #                                      Solving PDEs                             
 #####################################################################################
-def Explicit_solve_uxx_ut(g,a,b,L,T,nx,nt): #incomplete
-    '''
-    This function solves the 1D heat equation using the explicit method
-    the equation is given as:
-    u_t = u_xx
-    Parameters:
-    - g: g(x) = u(x,0)
-        The initial condition for position when t=0
-    - a: a(t) = u(0,t)
-        The initial condition for time when x=0
-    - b: b(t) = u(L,t)
-        The boundary condition for time when x=L
-    - L: The limit of the position
-    - T: The limit of the time
-    - nx: The number of intervals in the position
-    - nt: The number of intervals in the time
-    Returns:
-    - V: List of u values at time T
-    - xlist: List of x values
-    '''
-    hx=L/nx
-    ht=T/nt
-    alpha=ht/(hx*hx)
-    if alpha>0.5:
-        print("hx=",hx)
-        print("ht=",ht)
-        raise ValueError(r" alpha > 0.5 (should be less than 0.5)")
-    else:
-        A = [[0 for i in range(nx)] for j in range(nx)]
-        for i in range(nx):
-            A[i][i]=1-(2*alpha)
-            if i!=0:
-                A[i][i-1]=alpha
-            if i!=(nx-1):
-                A[i][i+1]=alpha
-        V=[]        
-        # V=[[g((L/nx)*i)] for i in range(nx)]
-        for i in range(nx):
+class Explicit_solve_uxx_ut:
+    def __init__(self,g,a,b,L,nx,T,nt,timestep):
+        '''
+        The equation that we are trying to solve is: u_xx=u_t
+        Parameters:
+        - g: Function g(x)=u(x,0)
+        - a: Function a(x)=u(0,t)
+        - b: Function b(x)=u(L,t)
+        - L: Length of the rod
+        - nx: Number of spatial steps
+        - T: Total time
+        - nt: Number of time steps
+        - timestep: How many times the u(x,t) has to be time-evolved
+        '''
+        self.g = g
+        self.a = a
+        self.b = b
+        self.L = L
+        self.nx = nx
+        self.nt = nt
+        self.T = T
+        self.timestep = timestep
+    def check_stability(self):
+        '''
+        This function checks the stability of the Explicit method
+        That is, it checks if the value of alpha is less than 0.5 
+        '''
+        alpha = (self.T*(self.nx**2))/((self.L**2)*(self.nt))
+        if alpha>0.5:
+            raise ValueError("The method is not stable")
+        else:
+            pass
+
+    def create_A(self):
+        '''
+        This function creates the matrix A
+        '''
+        self.check_stability()
+
+        alpha = (self.T*(self.nx**2))/((self.L**2)*(self.nt))
+        A=[]
+        for i in range(self.nx):
+            row=[]
+            for j in range(self.nx):
+                if i==j:
+                    row.append(1-2*alpha)
+                elif abs(i-j)==1:
+                    row.append(alpha)
+                else:
+                    row.append(0)
+            A.append(row)
+        return A  
+
+    def create_V0(self):
+        f=self.g
+        V0=[]
+        for i in range(self.nx):
             if i==0:
-                V.append([0])
-            elif i==nx-1:
-                V.append([0])
-            else:    
-                V.append([g((L/nx)*i)])
-        A = np.linalg.matrix_power(A,nt+1)
-        V=np.dot(A,V)
+                V0.append([self.a(0)])
+            elif i==self.nx-1:
+                V0.append([self.b(0)])
+            else:
+                V0.append([f(i*self.L/self.nx)])   
+        return V0   
+
+    def solve(self):     
+        A=self.create_A()
+        V0=self.create_V0()
+        for i in range(self.timestep):
+            # V1=Matrix_Operations(V0).multiply(A)
+            V1=np.dot(A,V0)
+            del V0
+            V0=V1
+            del V1
+        return V0
 
 
-        return V        
+
 
 
 # def Crank-Nicolson(g):
