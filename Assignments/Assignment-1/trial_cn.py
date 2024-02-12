@@ -1,64 +1,124 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-# Function to solve a tridiagonal system of linear equations using Crank-Nicolson method
-def cnicolson(n, alpha):
-    # Initialize vector 'v' with values
-    v = np.zeros(n)
-    for i in range(len(v)):
-        v[i] = 4 * i - ((i ** 2) / 2.0)
+from Library_asgn1 import crank_nicholson
 
-    # Create identity matrix 'I' and tridiagonal matrix 'B'
-    I = np.identity(n)
-    B = np.zeros((n, n))
-    for i in range(n):
-        B[i, i] = 2
-    for j in range(n - 1):
-        B[j, j + 1] = -1
-    for j in range(1, n):
-        B[j, j - 1] = -1
+# def crank_nicholson(f, x_0, x_N, N_x, N_t, T, alpha):
+#     """"
+#     f : function that returns the initial condition
+#     x_0 : initial position point
+#     x_N : Final position point 
+#     N_x : Number of grid points in the x direction
+#     N_t : Number of grid points in the t direction
+#     T : Final time
+#     alpha : Diffusion coefficient
+#     """
+    
+#     # Grid points
+#     x = np.linspace(x_0, x_N, N_x+1)
+#     t = np.linspace(0, T, N_t+1)
+    
+#     # Initialize solution matrix
+#     u = []
+    
+#     # Set initial condition (adding to solution matrix)
+#     u.append([f(x[i]) for i in range(N_x+1)])
+    
+#     # set boundary conditions
+#     u[0][0] = 0
+#     u[0][N_x] = 0
+    
+#     u = np.array(u)
+#     I2paB_inv_cols = [] # list to store the columns of the inverse of (2I+alphaB)
+#     for j in range(N_x + 1): # for each col of Identity matrix
+#         X = list([0] for i in range(N_x + 1)) # initial guess
+#         for step in range(150):
+#             flag = 1
+#             for i in range(N_x + 1):
+#                 sum = 0
+#                 if i != 0:
+#                     sum += (- alpha * X[i - 1][0])
+#                 if i != N_x:
+#                     sum += (- alpha * X[i + 1][0])
+#                 if i == j:
+#                     temp = (1-sum) / (2+(2*alpha))
+#                 else:
+#                     temp = (-sum) / (2+(2*alpha))
+#                 if abs((temp) - (X[i][0])) > tolerance: #checks the tolerance at each new value
+#                     flag = 0
+#                 X[i][0] = temp
+#             if flag == 1:
+#                 break
+#         if flag == 0:
+#             print(f'Eqn not solved after 150 steps for {j}th col')
+#             return None
+#         I2paB_inv_cols.append(X)
+    
+#     # building I2paB_inv
+#     I2paB_inv = np.array(I2paB_inv_cols[0])
+#     for i in range(1,N_x + 1):
+#         I2paB_inv = np.append(I2paB_inv,I2paB_inv_cols[i],axis = 1)
+    
+#     # print(I2paB_inv)
+    
+#     # multiplication with (2I-alphaB) partially matrix free
+#     I2paB_inv_I2naB = []
+#     # multiplying with (2I-alphaB)
+#     for row in range(N_x + 1):
+#         I2paB_inv_I2naB.append([])
+#         for col in range(N_x + 1):
+#             sum = 0
+#             sum += I2paB_inv[row][col] * 2 * (1 - alpha)
+#             if col != 0:
+#                 sum += I2paB_inv[row][col - 1] * alpha
+#             if col != N_x:
+#                 sum += I2paB_inv[row][col + 1] * alpha
+#             I2paB_inv_I2naB[row].append(sum)
+#     I2paB_inv_I2naB = np.array(I2paB_inv_I2naB)
+    
+#     # print(I2paB_inv_I2naB)    
+    
+#     del I2paB_inv_cols, I2paB_inv
+    
+#     # solving the time evolution using Crank-Nicholson method
+#     for n in range(N_t):
+#         # building the vector (2I-alphaB)u^n
+#         u = np.append(u, [I2paB_inv_I2naB @ u[-1,:]], axis = 0) 
+#         u[-1,0] = 0
+#         u[-1,N_x] = 0
 
-    # Construct matrices 'm1' and 'm2' for the Crank-Nicolson method
-    m1 = 2 * I - 4 * alpha * B
-    m2 = np.linalg.inv(2 * I + 4 * alpha * B)
-    print(m2)
-
-    # Initialize vector 'm' with values and an empty list 'l' to store solutions
-    m = np.array(v)
-    l = []
-    n = 0
-
-    # Perform iterations to solve the linear system using Crank-Nicolson method
-    while n < 8:
-        v = m1 @ m2 @ v
-        l.append(v)
-        n += 1
-
-    # Return the list of solutions
-    return l
-# l=cnicolson(20, 0.4)
-# print(l)
+#     ''' 
+#     x : Grid points in the x direction
+#     t : Grid points in the t direction
+#     u : array Solution to the heat equation
+#     '''
+#     return x,t,u
 
 
 
 
-# Call the cnicolson function with parameters and store the results
-stored = cnicolson(8, 0.4)
 
-# Create a Pandas DataFrame from the stored solutions
-df = pd.DataFrame(stored)
 
-# Print the Pandas DataFrame to the console
-print("Solution as Pandas DataFrame:")
-print(df)
+def u0(x):
+    return ((4*x) - ((x**2)/2))
 
-# Plot a contour plot using the Pandas DataFrame
-plt.figure(figsize=(16, 10))
-contour_plot = plt.contourf(df.columns, df.index, df.values, cmap='viridis', levels=20)
-plt.colorbar(contour_plot, label='Values')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Contour Plot from Pandas DataFrame')
+x_0 = 0
+x_N = 8
+N_x = 80
+N_t = 5000
+T = 10
+alpha1 = (T/N_t)/(((x_N-x_0)/N_x)**2) # alpha = ht/hx^2
+alpha2 = 0.5
+Xs, Ts, U_xt = crank_nicholson(u0, x_0, x_N, N_x, N_t, T, alpha1)
 
-# Show the plot
+# plotting the solution
+plt.figure(figsize=(10, 6))
+plt.plot(Xs, U_xt[0], label=f"t = 0")
+for i in range(500, len(Ts), 500):
+    plt.plot(Xs, U_xt[i], label=f"t = {Ts[i]:.2f}")
+plt.xlabel("x")
+plt.ylabel("u(x, t)")
+plt.title(f"Solution of the given heat equation using Crank-Nicolson method using alpha = {alpha1:.4f}")
+plt.legend()
+plt.grid()
 plt.show()

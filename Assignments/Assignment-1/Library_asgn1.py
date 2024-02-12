@@ -589,59 +589,90 @@ class Explicit_solve_uxx_ut: #not complete
 
 
         
-
-
-
-def crank_nicolson(g: float,L: int,n: int, T: float,dt: float):
+def crank_nicholson(f, x_0, x_N, N_x, N_t, T, alpha):
+    """"
+    f : function that returns the initial condition
+    x_0 : initial position point
+    x_N : Final position point 
+    N_x : Number of grid points in the x direction
+    N_t : Number of grid points in the t direction
+    T : Final time
+    alpha : Diffusion coefficient
     """
-    - g: g(x) function at t=0 that is g(x) = u(x,0)
-    - L: Max value of position
-    - n: number of spatial mesh points
-    - T: Limit of time
-    - dt: time step
-    - The initial values a(t) and b(t) are given to be  0 for the case in the question.
-    This code is specific for the case in the question.
-    """
-    dx = L / (n + 1)
-    alpha = dt / (dx**2)  
-    A = np.zeros((n, n))  
-    B = np.zeros((n, n))  
-    I = np.zeros((n, n))  
+    x = np.linspace(x_0, x_N, N_x+1)
+    t = np.linspace(0, T, N_t+1)               # initialize all the matrices
+    u = []
+    u.append([f(x[i]) for i in range(N_x+1)])  # set initial condition (adding to solution matrix)
+    u[0][0] = 0
+    u[0][N_x] = 0                              # set boundary conditions
+    
+    u = np.array(u)
+    I2paB_inv_cols = []                        
 
     '''
-    The matrix A and B are created as per the Crank Nicolson method,
-    the matrix A is a tridiagonal matrix with 2+2*alpha on the diagonal and -alpha on the off-diagonals
-    The matrix B is a tridiagonal matrix with 2-2*alpha on the diagonal and alpha on the off-diagonals
+    Now to solve the Equation, we will be using the gauss seidel Method so the tol is set to 1e-6
     '''
-    for i in range(n):
-        A[i,i] = 2+2*alpha
-        B[i,i] = 2-2*alpha
-        for j in range(n):
-            if j == i + 1 or j == i - 1:
-                A[i,j] = -1*alpha
-                B[i,j] = +1*alpha
-
-    x = [0]
-    for i in range(n - 1):
-        x.append(x[i] + dx)
+    for j in range(N_x + 1):                  
+        X = list([0] for i in range(N_x + 1))  
+        for step in range(150):
+            flag = 1
+            for i in range(N_x + 1):
+                sum = 0
+                if i != 0:
+                    sum += (- alpha * X[i - 1][0])
+                if i != N_x:
+                    sum += (- alpha * X[i + 1][0])
+                if i == j:
+                    temp = (1-sum) / (2+(2*alpha))
+                else:
+                    temp = (-sum) / (2+(2*alpha))
+                if abs((temp) - (X[i][0])) > 1e-6: #Tolrrence is set to 1e-6
+                    flag = 0
+                X[i][0] = temp
+            if flag == 1:
+                break
+        if flag == 0:
+            print(f'Eqn not solved after 150 steps for {j}th col')
+            return None
+        I2paB_inv_cols.append(X)
+    
+    I2paB_inv = np.array(I2paB_inv_cols[0])
+    for i in range(1,N_x + 1):
+        I2paB_inv = np.append(I2paB_inv,I2paB_inv_cols[i],axis = 1)
+    
+    I2paB_inv_I2naB = []
+    '''Multiplyinf (2I-alphaB) with I2paB_inv partially matrix free'''
+    for row in range(N_x + 1):
+        I2paB_inv_I2naB.append([])
+        for col in range(N_x + 1):
+            sum = 0
+            sum += I2paB_inv[row][col] * 2 * (1 - alpha)
+            if col != 0:
+                sum += I2paB_inv[row][col - 1] * alpha
+            if col != N_x:
+                sum += I2paB_inv[row][col + 1] * alpha
+            I2paB_inv_I2naB[row].append(sum)
+    I2paB_inv_I2naB = np.array(I2paB_inv_I2naB)
+    
+    
+    del I2paB_inv_cols, I2paB_inv
     '''
-    The function g(x) is used to create the 
-    initial values of the vector v0'''
-    v0 = []
-    for i in range(n):
-        v0.append(g(x[i]))
-    v0[-1] = v0[0]
+    The obtaining the vector after n time steps
+    '''
+    for n in range(N_t):
+        u = np.append(u, [I2paB_inv_I2naB @ u[-1,:]], axis = 0) 
+        u[-1,0] = 0
+        u[-1,N_x] = 0
+    ''' 
+    x : Grid points in the x direction
+    t : Grid points in the t direction
+    u : array Solution to the heat equation
+    '''
+    return x,t,u
 
-    v0 = np.array(v0)
-    v = v0.copy()
-    '''Arrays are initialized to store the solution at each time step'''
-    solution_at_each_time = [v0.copy()]
-    for _ in range(int(T / dt)):
-        C = np.matmul(np.linalg.inv(A), B)
-        v = np.matmul(C, v)
-        solution_at_each_time.append(v.copy())
 
-    return solution_at_each_time, x
+
+
 
 
 
