@@ -672,6 +672,85 @@ def crank_nicholson(f, x_0, x_N, N_x, N_t, T, alpha):
 
 
 
+def poisson_laplace(rho, x_i, x_f, y_i, y_f, u_iy, u_fy, u_xi, u_xf, N):
+    '''
+    Parameters:
+    - rho: Function rho(x,y) del^2 u = -rho(x,y)
+    - x_i: Initial x value
+    - x_f: Final x value
+    - y_i: Initial y value
+    - y_f: Final y value
+    - u_iy: Function u_iy(x)
+    - u_fy: Function u_fy(x)
+    '''
+    '''
+    defining the grid N+2 x N+2
+    '''
+    x = np.linspace(x_i, x_f, N+2)
+    y = np.linspace(y_i, y_f, N+2)
+    hx = (x_f - x_i)/(N + 1)
+    hy = (y_f - y_i)/(N + 1)
+    if hx != hy:
+        raise ValueError("The grid is not square")
+    h = hx 
+    A = np.zeros((N**2,N**2))
+    '''
+    Defining the matrix A
+    '''
+    for i in range(N**2):
+        A[i, i] = 4
+        if i == 0:
+            A[i, i+1]=-1
+            A[i, i+N]=-1
+        elif i < N:
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i+N]=-1
+        elif i < (N**2-N):
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i-N]=-1
+            A[i, i+N]=-1
+        elif i < (N**2-1):
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i-N]=-1
+        else:
+            A[i, i-1] = -1
+            A[i, i-N] = -1
+    '''
+    Defining the matrix B
+    '''
+    B = []
+    for i in range(1,N+1):
+        for j in range(1,N+1):
+            sum = rho(x[i], y[j]) * h**2
+            if i == 0:
+                sum += u_xi(y[j])
+            if i == N:
+                sum += u_xf(y[j])
+            if j == 0:
+                sum += u_iy(x[i])
+            if j == N:
+                sum += u_fy(x[i])
+            B.append(sum)    
+    B = np.array(B)[:,None]
+    u = np.linalg.solve(A, B)
+    u = np.array(u).reshape((N,N))
+    u = np.append(u_iy(y[1:-1,None]), u, axis = 1)
+    u = np.append(u, u_fy(y[1:-1, None]), axis = 1)
+    u = np.append([u_xi(x)], u, axis = 0)
+    u = np.append(u, [u_xf(x)], axis = 0)
+    
+
+    '''
+    x : Grid points in the x direction
+    y : Grid points in the y direction
+    u : array Solution to the Poisson equation
+    '''
+    return x, y, u
+
+
 
 
 
