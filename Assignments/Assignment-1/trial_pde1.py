@@ -12,12 +12,11 @@ def b(t):
 
 B=[]
 import matplotlib.pyplot as plt
-for i in [1]:
-    p=Explicit_solve_uxx_ut(g,a,b,2,20,4,5000,i)
-    A=p.solve()
-    x=np.linspace(0,2,20)
-    print(len(A))
-    print(A)
-    # plt.plot(x,A)
+for i in [0,10,20,40]:
+    p=crank_nicolson(g,a,b,2,20,4,5000,i)
+    hx=2/21
+    x,A=p.solve()
+    plt.plot(x,A)
+print(x)    
 plt.grid()
 plt.show()    

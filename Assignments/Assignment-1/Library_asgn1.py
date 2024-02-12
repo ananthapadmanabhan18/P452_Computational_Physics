@@ -507,7 +507,7 @@ class verlet_algorithm:
 #####################################################################################
 #                                      Solving PDEs                             
 #####################################################################################
-class Explicit_solve_uxx_ut:
+class Explicit_solve_uxx_ut: #not complete
     def __init__(self,g,a,b,L,nx,T,nt,timestep):
         '''
         The equation that we are trying to solve is: u_xx=u_t
@@ -540,7 +540,7 @@ class Explicit_solve_uxx_ut:
         else:
             pass
 
-    def create_A(self):
+    def create_A_inv(self):
         '''
         This function creates the matrix A
         '''
@@ -552,13 +552,14 @@ class Explicit_solve_uxx_ut:
             row=[]
             for j in range(self.nx):
                 if i==j:
-                    row.append(1-2*alpha)
+                    row.append(1+2*alpha)
                 elif abs(i-j)==1:
-                    row.append(alpha)
+                    row.append(-alpha)
                 else:
                     row.append(0)
             A.append(row)
-        return A  
+        A_inv = np.linalg.inv(A)
+        return A_inv 
 
     def create_V0(self):
         f=self.g
@@ -575,19 +576,93 @@ class Explicit_solve_uxx_ut:
     def solve(self):     
         A=self.create_A()
         V0=self.create_V0()
+        A_inv = np.linalg.inv(A)
         for i in range(self.timestep):
-            # V1=Matrix_Operations(V0).multiply(A)
-            V1=np.dot(A,V0)
+            V1=Matrix_Operations(V0).multiply(A_inv)
+            # V1=np.matmul(A_inv,V0)
             del V0
             V0=V1
             del V1
+            V0[0][0]=0
+            V0[self.nx-1][0]=0
         return V0
 
 
+        
 
 
 
-# def Crank-Nicolson(g):
+def crank_nicolson(g: float,L: int,n: int, T: float,dt: float):
+    """
+    - g: g(x) function at t=0 that is g(x) = u(x,0)
+    - L: Max value of position
+    - n: number of spatial mesh points
+    - T: Limit of time
+    - dt: time step
+    - The initial values a(t) and b(t) are given to be  0 for the case in the question.
+    This code is specific for the case in the question.
+    """
+    dx = L / (n + 1)
+    alpha = dt / (dx**2)  
+    A = np.zeros((n, n))  
+    B = np.zeros((n, n))  
+    I = np.zeros((n, n))  
+
+    '''
+    The matrix A and B are created as per the Crank Nicolson method,
+    the matrix A is a tridiagonal matrix with 2+2*alpha on the diagonal and -alpha on the off-diagonals
+    The matrix B is a tridiagonal matrix with 2-2*alpha on the diagonal and alpha on the off-diagonals
+    '''
+    for i in range(n):
+        A[i,i] = 2+2*alpha
+        B[i,i] = 2-2*alpha
+        for j in range(n):
+            if j == i + 1 or j == i - 1:
+                A[i,j] = -1*alpha
+                B[i,j] = +1*alpha
+
+    x = [0]
+    for i in range(n - 1):
+        x.append(x[i] + dx)
+    '''
+    The function g(x) is used to create the 
+    initial values of the vector v0'''
+    v0 = []
+    for i in range(n):
+        v0.append(g(x[i]))
+    v0[-1] = v0[0]
+
+    v0 = np.array(v0)
+    v = v0.copy()
+    '''Arrays are initialized to store the solution at each time step'''
+    solution_at_each_time = [v0.copy()]
+    for _ in range(int(T / dt)):
+        C = np.matmul(np.linalg.inv(A), B)
+        v = np.matmul(C, v)
+        solution_at_each_time.append(v.copy())
+
+    return solution_at_each_time, x
+
+
+
+                               
+
+                    
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+
+
 
 
 
