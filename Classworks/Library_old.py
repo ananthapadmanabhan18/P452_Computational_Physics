@@ -34,17 +34,21 @@ def lcg2(i,a,c,m,n):
 
 
 
+
+
+
+
 class rng():
     def __init__(self,seed, a = 1103515245, c = 12345 ,m = 32768):
-        #initiation of data input
+        # initiation of data input
         self.term = seed
         self.a = a
         self.c = c
         self.m = m
     def gen(self):
-        #generates a random number in the range (0,1)
+        # generates a random number
         self.term = (((self.a * self.term) + self.c) % self.m)
-        return self.term / self.m
+        return self.term
     def genlist(self,length):
         # returns a list of 'n' random numbers in the range (0,1) where 'n' is 'length'.
         RNs = []
