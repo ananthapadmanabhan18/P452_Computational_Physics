@@ -379,7 +379,7 @@ class Gaussian_Quadrature:
 
 
 
-def monte_carlo(f,a,b,N,seed):
+def monte_carlo(f: float,a: float,b: float,N: int,seed: int):
     '''
     # Monte Carlo Integration
     ## Parameters
@@ -399,7 +399,7 @@ def monte_carlo(f,a,b,N,seed):
         F+=((b-a)*f(k))/N   
     return F   
 
-def monte_carlo_error(f,a,b,N,seed):
+def monte_carlo_error(f: float,a: float,b: float,N: int,seed: int):
     '''
     # Monte Carlo Integration
     ## Parameters
@@ -422,5 +422,279 @@ def monte_carlo_error(f,a,b,N,seed):
 #####################################################################################
 #                              Solving dy/dx = f(x,y)                             
 #####################################################################################
+def forward_euler(dx: float,x_ini: float,t_ini: float,t_final: float,N: int):
+    '''
+    # Forward Euler Method
+    for solving the differential equation dy/dx = f(x,y)
+    also called explicit Euler method
+    ## Parameters
+    - dx: The function f(x,y): dy/dx = f(x,y)
+    - x_ini: Initial value of y such that y(t_ini) = x_ini
+    - t_ini: Initial value of x
+    - t_final: Final value of x
+    - N: Number of steps to divide the interval [t_ini,t_final]
+    ## Returns
+    - xlist: List of x values
+    - ylist: List of y values satisfying the function dy/dx = f(x,y)
+    '''
+    dt=(t_final-t_ini)/N
+    xlist=[]
+    ylist=[]
+    t=t_ini
+    while t<=t_final:
+        xlist.append(t)
+        ylist.append(x_ini)
+        x_ini+=dt*dx(t,x_ini)
+        t+=dt
+    return xlist,ylist
+
+def backward_euler(f: float,y0: float,x0: float,xf: float,num_points: int):
+    '''
+    # Backward Euler Method
+    for solving the differential equation dy/dx = f(x,y)
+    ## Parameters
+    - f: The function f(x,y): dy/dx = f(x,y)
+    - y0: Initial value of y such that y(x0) = y0
+    - x0: Initial value of x
+    - xf: Final value of x
+    - num_points: Number of steps to divide the interval [x0,xf]
+    ## Returns
+    - x_values: List of x values
+    - y_values: List of y values satisfying the function dy/dx = f(x,y)
+    '''
+    h = (xf - x0) / num_points
+    x_values = np.linspace(x0, xf, num_points + 1)
+    y_values = np.zeros(num_points + 1)
+    y_values[0] = y0
+
+    for i in range(1, num_points + 1):
+        # Use backward Euler method formula: y[i] = y[i-1] + h * f(x[i], y[i])
+        y_values[i] = y_values[i - 1] + h * f(x_values[i], y_values[i - 1])
+
+    return x_values, y_values
+
+
+
+def predictor_corrector(dybydx: float,y0: float,x0: float,x_f: float,N: int):
+    '''
+    # Predictor Corrector Method
+    for solving the differential equation dy/dx = f(x,y)
+    ## Parameters
+    - dybydx: The function f(x,y): dy/dx = f(x,y)   
+    - y0: Initial value of y such that y(x0) = y0
+    - x0: Initial value of x
+    - x_f: Final value of x
+    - N: Number of steps to divide the interval [x0,xf]
+    ## Returns
+    - xlist: List of x values
+    - ylist: List of y values satisfying the function dy/dx = f(x,y)
+    '''
+    h=(x_f-x0)/N
+    xlist=[]
+    ylist=[]
+    x=x0
+    y=y0
+    xlist.append(x)
+    ylist.append(y)
+    while x<x_f:
+        k1=dybydx(x,y)*h
+        k2=dybydx(x+h,y+k1)*h
+        y=y+0.5*(k1+k2)
+        x=x+h
+        xlist.append(x)
+        ylist.append(y)
+    return xlist,ylist
+
+def RK2_solve(dybydx: float,y0: float,x0: float,xf: float,N: int):
+    '''
+    # Runge-Kutta 2nd Order Method
+    for solving the differential equation dy/dx = f(x,y)
+    ## Parameters
+    - dybydx: The function f(x,y): dy/dx = f(x,y)
+    - y0: Initial value of y such that y(x0) = y0
+    - x0: Initial value of x
+    - xf: Final value of x
+    - N: Number of steps to divide the interval [x0,xf]
+    ## Returns
+    - xlist: List of x values
+    - ylist: List of y values satisfying the function dy/dx = f(x,y)
+    '''
+    h=(xf-x0)/N
+    xlist=[]
+    ylist=[]
+    x=x0
+    y=y0
+    xlist.append(x)
+    ylist.append(y)
+    while x<xf:
+        k1=h*dybydx(x,y)
+        k2=dybydx(x+(h/2),y+(k1/2))*h
+        y=y+k2
+        x=x+h
+        xlist.append(x)
+        ylist.append(y)
+    return xlist,ylist
+
+def RK4_solve(dybydx: float,y0: float,x0: float,x_f: float,N: int):
+    '''
+    # Runge-Kutta 4th Order Method
+    for solving the differential equation dy/dx = f(x,y)
+    ## Parameters
+    - dybydx: The function f(x,y): dy/dx = f(x,y)
+    - y0: Initial value of y such that y(x0) = y0
+    - x0: Initial value of x
+    - x_f: Final value of x
+    - N: Number of steps to divide the interval [x0,xf]
+    ## Returns
+    - xlist: List of x values
+    - ylist: List of y values satisfying the function dy/dx = f(x,y)
+    '''
+    h=(x_f-x0)/N
+    xlist=[]
+    ylist=[]
+    x=x0
+    y=y0
+    xlist.append(x)
+    ylist.append(y)
+    while x<x_f:
+        k1=h*dybydx(x,y)
+        k2=h*dybydx(x+(h/2),y+(k1/2))
+        k3=h*dybydx(x+(h/2),y+(k2/2))
+        k4=h*dybydx(x+h,y+k3)
+        y=y+(k1+2*k2+2*k3+k4)/6
+        x=x+h
+        xlist.append(x)
+        ylist.append(y)
+    return xlist,ylist 
+
+
+
+def semi_implicit_euler_solve(f,g,x0,v0,t0,t_max,step_size):
+    '''
+    # Semi-Implicit Euler Method
+    ## Parameters:
+    - f: f(v,t):
+        dx/dt = f(v,t)
+    - g: g(x,t)
+        dv/dt = g(x,t)
+    - x0: initial position: x(t0) = x0
+    - v0: initial velocity: v(t0) = v0
+    - t0: initial time
+    - t_max: final time:
+        The to which the Solution is to be calculated
+    - step: The size of the interval
+    ## Returns:
+    - xlist: List of x values
+    - vlist: List of v values
+    - tlist: List of t values
+    The function returns a 3-tuple of lists containing the x, v and t values respectively
+    '''
+    h=step_size
+    vlist=[]
+    xlist=[]
+    tlist=[]
+    x=x0
+    v=v0
+    t=t0
+    while t<=t_max:
+        xlist.append(x)
+        vlist.append(v)
+        tlist.append(t)
+        v=v + (h*g(x,t))
+        x=x + (h*f(v,t))
+        t=t+h
+    return xlist,vlist,tlist    
+
+
+def verlet_solve(a: float,x0: float,v0: float,t0: float,t_max: float,h: float):
+    '''
+    # Verlet Method
+    ## Parameters
+    - a: The function a(x) which gives the acceleration of a(x(t)) = F(x(t))/m
+    - x0: initial position: x(t0) = x0
+    - v0: initial velocity: v(t0) = v0
+    - t0: initial time
+    - t_max: final time:
+        The to which the Solution is to be calculated
+    - h: The size of the interval that (t0,t_max) is divided into
+    ## Returns   
+    - xlist: List of x values
+    - vlist: List of v values
+    - tlist: List of t values 
+    '''
+    xlist=[]
+    vlist=[]
+    tlist=[]
+    x=x0
+    t=t0
+    v=v0
+    #The first 
+    xlist.append(x)
+    vlist.append(v)
+    tlist.append(t)
+    x1=(x)+(h*v)+(0.5*h*h*a(x))
+    v1=(x1-x)/h
+    t=t+h
+    xlist.append(x1)
+    vlist.append(v1)
+    tlist.append(t)
+    #The rest of the steps
+    while t<=t_max:
+        x2=(2*x1)-(x)+(h*h*a(x1))
+        v=(x2-x)/(2*h)
+        x=x1
+        x1=x2
+        t=t+h
+        xlist.append(x)
+        vlist.append(v)
+        tlist.append(t)
+    return xlist,vlist,tlist    
+
+def velocity_verlet_solve(a: callable,x0: float,v0: float,t0: float,t_f: float,h: float):
+    '''
+    # Velocity Verlet Method
+    ## Parameters
+    - a: The function a(x) which gives the acceleration of a(x(t)) = F(x(t))/m
+    - x0: initial position: x(t0) = x0
+    - v0: initial velocity: v(t0) = v0
+    - t0: initial time
+    - t_f: final time:
+        The to which the Solution is to be calculated
+    - h: The size of the interval that (t0,t_max) is divided into
+    ## Returns
+    - xlist: List of x values
+    - vlist: List of v values
+    - tlist: List of t values    
+    '''
+    xlist=[x0]
+    vlist=[v0]
+    tlist=[t0]
+    i=1
+    while t0<t_f:
+        v_half=v0+(0.5*h*a(x0))
+        x1= x0 +v_half*h
+        v1= v_half+(0.5*h*a(x1))
+        xlist.append(x1)
+        vlist.append(v1)
+        t0+=h
+        tlist.append(t0)
+        x0=x1
+        v0=v1
+        i+=1
+    return xlist,vlist,tlist 
+
+def leap_frog_solve():
+    '''
+    # Leap Frog Method
+    Used to solve the hamiltons equation of motion
+    '''
+    pass   
+
+
+
+
+
+
+
 
 
