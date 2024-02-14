@@ -567,6 +567,114 @@ def RK4_solve(dybydx: float,y0: float,x0: float,x_f: float,N: int):
         ylist.append(y)
     return xlist,ylist 
 
+def RK4_solve_coupled(fnlist,x0,y0s,limit,h):
+    '''
+    # Runge-Kutta 4th Order Method for Coupled Equations
+    ## Parameters
+    - fnlist: List of functions to be solved that is dy_i/dx = f_i(x,t) where x is a list of variables.
+    - x0: the initial value of t or x (acc to qn)
+    - y0s: the value of each of the solution at x0
+    - limit: The limit to which the plot is to be made
+    - h: step size
+    ## Returns
+    - datT: List of x values or t values
+    - datY: List of List of y values for each variable y_i
+    -
+    '''
+    limit -= h/2 
+    n = len(y0s) 
+    k1 = [0 for i in range(n)]
+    k2 = [0 for i in range(n)]
+    k3 = [0 for i in range(n)]
+    k4 = [0 for i in range(n)]
+    tys= [0 for i in range(n)] 
+    datY = []
+    for i in range(n):
+        datY.append([y0s[i]])
+    datT = [x0]
+    while x0 < limit:
+        for i in range(n):
+            k1[i] = h*fnlist[i](y0s,x0)    
+        for i in range(n):
+            tys[i] = y0s[i] + (k1[i] / 2)
+        for i in range(n):
+            k2[i] = h*fnlist[i](tys, (x0 + (h/2)))
+        for i in range(n):
+            tys[i] = y0s[i] + (k2[i] / 2)
+        for i in range(n):
+            k3[i] = h*fnlist[i](tys, (x0 + (h/2)))   
+        for i in range(n):
+            tys[i] = y0s[i] + k3[i]
+        for i in range(n):
+            k4[i] = h*fnlist[i](tys, (x0 + h))
+        for i in range(n):
+            y0s[i] += ((k1[i] + (2 * k2[i]) + (2 * k3[i]) + (k4[i])) / 6)
+        x0 += h
+        for i in range(n):
+            datY[i].append(y0s[i])
+        datT.append(x0)
+    return datT, datY
+
+
+def shooting_solve(fns,x0,y0,x1,y1,guess1,tol,h):  
+    '''
+    # Shooting Method
+    ## Parameters
+    - fns: List of functions to be solved that is dy_i/dx = f_i(x,t) where x is a list of variables.
+    - x0: first initial value of t or x (acc to qn)
+    - y0: first value of the solution at x0
+    - x1: second final value of t or x (acc to qn)
+    - y1: second value of the solution at x1
+    - guess1: The initial guess for the second variable
+    - tol: The tolerance for the solution
+    - h: step size
+    ## Returns
+    - X: List of x values or t values
+    - Y: List of List of y values for each variable y_i
+    '''  
+    X,Y = RK4_solve_coupled(fns,x0,[y0,guess1],x1,h)
+    ye1 = Y[0][-1]
+    if abs(ye1 - y1) < tol:
+        return X,Y
+    if ye1 < y1:
+        guess1side = -1
+    else :
+        guess1side = 1
+    guess2 = guess1 + 2   
+    X,Y =RK4_solve_coupled(fns,x0,[y0,guess2],x1,h)
+    ye2 = Y[0][-1]
+    if ye2 < y1:
+        guess2side = -1
+    else :
+        guess2side = 1
+    while guess1side * guess2side != -1:
+
+        if abs(y1-ye2) > abs(y1-ye1):
+            guess2 = guess1 - abs(guess2-guess1)
+        else:
+            guess2 += abs(guess2-guess1)
+        X,Y = RK4_solve_coupled(fns,x0,[y0,guess2],x1,h)
+        ye2 = Y[0][-1]
+        if ye2 < y1:
+            guess2side = -1
+        else :
+            guess2side = 1
+    i = 0
+    while True:
+        newguess = guess1 + (((guess2 - guess1)/(ye1 - ye2))*(y1 - ye2))
+        i += 1
+        X,Y = RK4_solve_coupled(fns,x0,[y0,newguess],x1,h)
+        yvalnew = Y[0][-1]
+        if abs(yvalnew - y1) <tol:
+            break
+        if yvalnew < y1:
+            guess1 = newguess
+            ye1 = yvalnew
+        else:
+            guess2 = newguess
+            ye2 = yvalnew
+    return X,Y
+
 
 
 def semi_implicit_euler_solve(f,g,x0,v0,t0,t_max,step_size):
@@ -628,7 +736,6 @@ def verlet_solve(a: float,x0: float,v0: float,t0: float,t_max: float,h: float):
     x=x0
     t=t0
     v=v0
-    #The first 
     xlist.append(x)
     vlist.append(v)
     tlist.append(t)
@@ -638,7 +745,6 @@ def verlet_solve(a: float,x0: float,v0: float,t0: float,t_max: float,h: float):
     xlist.append(x1)
     vlist.append(v1)
     tlist.append(t)
-    #The rest of the steps
     while t<=t_max:
         x2=(2*x1)-(x)+(h*h*a(x1))
         v=(x2-x)/(2*h)
@@ -683,12 +789,15 @@ def velocity_verlet_solve(a: callable,x0: float,v0: float,t0: float,t_f: float,h
         i+=1
     return xlist,vlist,tlist 
 
-def leap_frog_solve():
+def leap_frog_solve(pi: callable,F: callable,h):
     '''
     # Leap Frog Method
     Used to solve the hamiltons equation of motion
     '''
     pass   
+# LEAP FROG NOT DONE
+
+
 
 
 
