@@ -27,7 +27,7 @@ class rng():
 #####################################################################################
 #                        Solution of Non- Linear Equations                             
 #####################################################################################
-def bracket(a0: float,b0: float,f: float):
+def bracket(a0: float,b0: float,f: callable):
     '''
     # Parameters
     - a0: Lower bound of the interval
