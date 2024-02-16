@@ -798,10 +798,58 @@ def leap_frog_solve(pi: callable,F: callable,h):
 # LEAP FROG NOT DONE
 
 
+#####################################################################################
+#                              Solving Heat Equation                             
+#####################################################################################
+'''
+Here we will be solving the heat equation of the form:
+    du(x,t)/dt = alpha * d^2u(x,t)/dx^2
+    where T is the temperature and alpha is the thermal diffusivity
+'''
+def pde_explicit_solve(g: callable,a: callable, b: callable, x0: float, x_m: float, t0: float, t_m: float, N_x: int, N_t: int,req_time_step: int):
+    '''
+    # Explicit Finite Difference Method
+    for solving the heat equation
+    ## Parameters
+    - g: Initial condition function u(x,t=0) = g(x)
+    - a: Boundary condition function u(x=0,t) = a(t)
+    - b: Boundary condition function u(x=x_m,t) = b(t)
+    - x0: Initial value of x
+    - x_m: Final value of x
+    - t0: Initial value of t
+    - t_m: Final value of t
+    - N_x: Number of steps to divide the interval [x0,x_m]
+    - N_t: Number of steps to divide the interval [t0,t_m]
+    ## Returns
+    - x: List of x values
+    - t: List of t values
+    - u: List of List of u values
+    '''
+    hx = (x_m - x0) / N_x
+    ht = (t_m - t0) / N_t
+    x=[x0 + i*hx for i in range(1,N_x)]
+    alpha = ht / (hx**2)
+    u = [[g(i)] for i in x]
+    A=[[0 for i in range(N_x-1)] for j in range(N_x-1)]
 
+    for i in range(len(A)):
+        for j in range(len(A[i])):
+            if i==j:
+                A[i][j]=1+2*alpha
+            elif abs(i-j)==1:
+                A[i][j]=-alpha
 
-
-
+    A1 = np.linalg.inv(A)
+    del A
+    An = np.linalg.matrix_power(A1,req_time_step)   
+    del A1
+    v_req = np.matmul(An,u).tolist()
+    del An
+    v_req.insert(0,[a(t0)])
+    v_req.append([b(t0)])
+    x.insert(0,x0)
+    x.append(x_m)
+    return x,v_req,[t0 + i*ht for i in range(N_t+1)]
 
 
 

@@ -175,7 +175,7 @@ def get_transpose(matrix):
 def get_inv_mat_GJ(A):
 
     if len(A) != len(A[0]): #if not square matrix, exit
-        return None
+        raise ValueError('Matrix is not square')
 
     n = len(A) #the dimension of matrix will be n*n
     I = []
