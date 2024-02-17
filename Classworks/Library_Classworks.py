@@ -902,7 +902,7 @@ def crank_nicoson(g: callable,a: callable, b: callable, x0: float, x_m: float, t
 
     matrix1=[[I[i][j]-B[i][j] for j in range(N_x-1)] for i in range(N_x-1)]
     matrix2=[[I[i][j]+B[i][j] for j in range(N_x-1)] for i in range(N_x-1)] 
-    matrix21=np.linalg.inv(matrix2)
+    matrix21=get_inv_mat_GJ(matrix2)
     del matrix2
     matrix3=np.matmul(matrix21,matrix1)     
     del matrix1,matrix21

@@ -20,7 +20,3 @@ for i in [0,100,200,300,400,500,600,700]:
 plt.legend()
 plt.grid()
 plt.show()
-
-
-
-
