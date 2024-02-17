@@ -24,6 +24,162 @@ class rng():
             self.term = (((self.a * self.term) + self.c) % self.m)
             RNs.append(self.term / self.m)
         return RNs  
+
+#####################################################################################
+#                               Matrix Operations                             
+#####################################################################################
+def print_matrix(matrix):
+    '''
+    This function prints the matrix A defined in the init function
+    if flag=1, it prints the matrix B
+    '''
+    for row in matrix:
+        for element in row:
+            print("\t",element, end="\t")
+        print()
+
+
+def matrix_copy(A1):
+    '''
+    This function returns a copy of the matrix A
+    '''
+    A2 = [[0 for i in range(len(A1[0]))] for j in range(len(A1))]
+    for i in range(len(A1)):
+        A2[i]=A1[i][:]
+    return A1 
+
+
+def add_matrix(A,B):
+    '''
+    This function adds the matrix A and B
+    '''
+    result = matrix_copy(A)
+    for i in range(len(A)):
+        for j in range(len(A[0])):
+            result[i][j] = result[i][j] + B[i][j]
+    return result
+
+
+
+
+def multiply_matrix(A,B):
+    '''
+    This function multiplies the matrix A and B
+    '''
+    result = [[0 for i in range(len(B[0]))] for j in range(len(A))]
+    for i in range(len(A)):
+        for j in range(len(B[0])):
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+    return result   
+
+
+def get_transpose(A):
+    '''
+    This function returns the transpose of the matrix A
+    '''
+    result = [[0 for i in range(len(A))] for j in range(len(A[0]))]
+    for i in range(len(A)):
+        for j in range(len(A[0])):
+            result[j][i] = A[i][j]
+    return result
+
+
+
+def Get_Gauss_jordan_inv(A):
+    '''
+    # Inverse of a Matrix using Gauss Jordan Method
+    ## Parameters
+    - A: The matrix whose inverse is to be found
+    ## Returns
+    - The inverse of the matrix A
+    '''
+
+    if len(A) != len(A[0]):
+        raise ValueError('Matrix is not square')
+
+    n = len(A)
+    I = []
+    for row in range(n):
+        I.append(list())
+        for col in range(n):
+            if col == row:
+                I[row].append(1)
+            else:
+                I[row].append(0)
+    for curr in range(n): 
+        if A[curr][curr] == 0:
+            max_row = curr
+            for row in range(curr + 1,n):
+                if abs(A[row][curr]) > abs(A[max_row][curr]):
+                    max_row = row
+            if max_row == curr:
+                return None
+            A[curr],A[max_row] = A[max_row], A[curr]
+            I[curr],I[max_row] = I[max_row], I[curr]
+        if A[curr][curr] != 1:
+            pivot = A[curr][curr]
+            for i in range(n):
+                A[curr][i] = A[curr][i] / pivot
+                I[curr][i] = I[curr][i] / pivot
+        for i in range(0,n):
+            if i == curr:
+                continue
+            if A[i][curr] != 0:
+                lead = A[i][curr]
+                for j in range(0,n):
+                    A[i][j] = A[i][j] - (A[curr][j] * lead)
+                    I[i][j] = I[i][j] - (I[curr][j] * lead)
+    return I
+
+#####################################################################################
+#                          Solution of Linear Equations                             
+#####################################################################################
+def gauss_jordan_solve(A,B):
+    '''
+    # Gauss Jordan Method
+    ## Parameters
+    - A: The matrix A in the equation A.X = B
+    - B: The matrix B in the equation A.X = B
+    ## Returns
+    - Solution: X,The solution of the equation A.X = B
+    '''
+    augmat = A #constructing augmented matrix
+    for row in range(len(augmat)):
+        augmat[row].append(B[row][0])
+    for curr in range(len(augmat)): #curr takes the index of each column we are processing
+        if augmat[curr][curr] == 0: #row swap if zero
+            max_row = curr
+            for row in range(curr + 1,len(augmat)):
+                if abs(augmat[row][curr]) > abs(augmat[max_row][curr]):
+                    max_row = row
+            if max_row == curr: #if max elemnt is still zero, max_row is not changed; no unique solution
+                return None
+            augmat[curr],augmat[max_row] = augmat[max_row], augmat[curr]
+        #making the pivot element 1
+        if augmat[curr][curr] != 1:
+            pivot_term = augmat[curr][curr]
+            for i in range(len(augmat[curr])):
+                augmat[curr][i] = augmat[curr][i] / pivot_term
+        #making others zero
+        for i in range(0,len(augmat)):
+            if i == curr: #skipping the pivot point
+                continue
+            if augmat[i][curr] != 0:
+                lead_term = augmat[i][curr]
+                for j in range(curr,len(augmat[i])): #elements before the curr column are zero in curr row, so no need to calculate
+                    augmat[i][j] = augmat[i][j] - (augmat[curr][j] * lead_term)
+    solution = []
+    for i in range(len(augmat)):
+        solution.append([augmat[i][-1]]) #Taking last elements into a list to form column matrix
+    return solution
+
+
+
+
+
+
+
 #####################################################################################
 #                        Solution of Non- Linear Equations                             
 #####################################################################################
@@ -844,7 +1000,7 @@ def pde_explicit_solve(g: callable,a: callable, b: callable, x0: float, x_m: flo
             elif abs(i-j)==1:
                 A[i][j]=-alpha
 
-    A1 = get_inv_mat_GJ(A)
+    A1 = Get_Gauss_jordan_inv(A)
     del A
     An = np.linalg.matrix_power(A1,req_time_step)   
     del A1
@@ -863,7 +1019,7 @@ def pde_explicit_solve(g: callable,a: callable, b: callable, x0: float, x_m: flo
         return x,ulist,[t0 + i*ht for i in range(req_time_step+1)]
     
 
-def crank_nicoson(g: callable,a: callable, b: callable, x0: float, x_m: float, t0: float, t_m: float, N_x: int, N_t: int,req_time_step: int,iflist=True,k=1):
+def crank_nicolson(g: callable,a: callable, b: callable, x0: float, x_m: float, t0: float, t_m: float, N_x: int, N_t: int,req_time_step: int,iflist=True,k=1):
     '''
     # Crank Nicolson Method
     for solving the heat equation of the form u_xx = k*u_t
@@ -902,7 +1058,7 @@ def crank_nicoson(g: callable,a: callable, b: callable, x0: float, x_m: float, t
 
     matrix1=[[I[i][j]-B[i][j] for j in range(N_x-1)] for i in range(N_x-1)]
     matrix2=[[I[i][j]+B[i][j] for j in range(N_x-1)] for i in range(N_x-1)] 
-    matrix21=get_inv_mat_GJ(matrix2)
+    matrix21=Get_Gauss_jordan_inv(matrix2)
     del matrix2
     matrix3=np.matmul(matrix21,matrix1)     
     del matrix1,matrix21
@@ -923,12 +1079,81 @@ def crank_nicoson(g: callable,a: callable, b: callable, x0: float, x_m: float, t
         return x,ulist,[t0 + i*ht for i in range(req_time_step+1)]
     
 
-
-
-
-
-
-
-
-
-
+#####################################################################################
+#                              Solving Poisson/Laplace Equation                             
+#####################################################################################
+def poisson_laplace(rho, x_i, x_f, y_i, y_f, u_iy, u_fy, u_xi, u_xf, N):
+    '''
+    Parameters:
+    - rho: Function rho(x,y) del^2 u = -rho(x,y)
+    - x_i: Initial x value
+    - x_f: Final x value
+    - y_i: Initial y value
+    - y_f: Final y value
+    - u_iy: Function u_iy(x)
+    - u_fy: Function u_fy(x)
+    '''
+    '''
+    defining the grid N+2 x N+2
+    '''
+    x = np.linspace(x_i, x_f, N+2)
+    y = np.linspace(y_i, y_f, N+2)
+    hx = (x_f - x_i)/(N + 1)
+    hy = (y_f - y_i)/(N + 1)
+    if hx != hy:
+        raise ValueError("The grid is not square")
+    h = hx 
+    A = np.zeros((N**2,N**2))
+    '''
+    Defining the matrix A
+    '''
+    for i in range(N**2):
+        A[i, i] = 4
+        if i == 0:
+            A[i, i+1]=-1
+            A[i, i+N]=-1
+        elif i < N:
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i+N]=-1
+        elif i < (N**2-N):
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i-N]=-1
+            A[i, i+N]=-1
+        elif i < (N**2-1):
+            A[i, i-1]=-1
+            A[i, i+1]=-1
+            A[i, i-N]=-1
+        else:
+            A[i, i-1] = -1
+            A[i, i-N] = -1
+    '''
+    Defining the matrix B
+    '''
+    B = []
+    for i in range(1,N+1):
+        for j in range(1,N+1):
+            sum = rho(x[i], y[j]) * h**2
+            if i == 0:
+                sum += u_xi(y[j])
+            if i == N:
+                sum += u_xf(y[j])
+            if j == 0:
+                sum += u_iy(x[i])
+            if j == N:
+                sum += u_fy(x[i])
+            B.append(sum)    
+    B = np.array(B)[:,None]
+    u =  gauss_jordan_solve(A,B)
+    u = np.array(u).reshape((N,N))
+    u = np.append(u_iy(y[1:-1,None]), u, axis = 1)
+    u = np.append(u, u_fy(y[1:-1, None]), axis = 1)
+    u = np.append([u_xi(x)], u, axis = 0)
+    u = np.append(u, [u_xf(x)], axis = 0)
+    '''
+    x : Grid points in the x direction
+    y : Grid points in the y direction
+    u : array Solution to the Poisson equation
+    '''
+    return x, y, u
