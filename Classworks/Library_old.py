@@ -112,6 +112,7 @@ def inv_solve_LU(A):
             invA[j].append(inv[j][0])
     return invA
 def get_det(A):
+    A=[A[i][:] for i in range(len(A))]
     n = len(A)
     if n != len(A[0]):
         print('Not a square matrix')
@@ -364,9 +365,11 @@ def for_back_chol_dec(A,B):
     return Y
 
 
-def lu_dec(A):
-    
 
+
+
+
+def lu_dec(A):
     n = len(A) 
     if n != len(A[0]): 
         print('Not square!')

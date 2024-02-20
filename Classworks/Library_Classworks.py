@@ -2,7 +2,7 @@ import numpy as np
 import scipy as scipy
 import math as math
 from scipy.optimize import root
-from Library_old import *
+# from Library_old import *
 #####################################################################################
 #                            Random Number Generation                             
 #####################################################################################
@@ -78,11 +78,43 @@ def get_transpose(A):
     '''
     This function returns the transpose of the matrix A
     '''
-    result = [[0 for i in range(len(A))] for j in range(len(A[0]))]
     for i in range(len(A)):
-        for j in range(len(A[0])):
-            result[j][i] = A[i][j]
-    return result
+        for j in range(i+1,len(A[i])):
+            A[i][j],A[j][i]=A[j][i],A[i][j]
+    return A
+
+def get_det(A):
+    '''
+    # Determinant of a Matrix
+    '''
+    A=[A[i][:] for i in range(len(A))]
+    n = len(A)
+    if n != len(A[0]):
+        print('Not a square matrix')
+        return None
+    for curr in range(n):
+        if A[curr][curr] == 0:
+            max_row = curr
+            for row in range(curr + 1,n):
+
+                if abs(A[row][curr]) > abs(A[max_row][curr]):
+                    max_row = row
+            if max_row == curr:
+                print('The matrix is singular!')
+                return None
+            A[curr],A[max_row] = A[max_row], A[curr]
+        for i in range(curr + 1,n):
+            if A[i][curr] != 0:
+                lead_term = A[i][curr]/A[curr][curr]
+                for j in range(curr,len(A[i])):
+                    A[i][j] = A[i][j] - (A[curr][j] * lead_term)
+    prdct = 1
+    for i in range(n):
+        prdct *= A[i][i]
+    return prdct
+
+
+
 
 
 
@@ -132,6 +164,23 @@ def Get_Gauss_jordan_inv(A):
                     I[i][j] = I[i][j] - (I[curr][j] * lead)
     return I
 
+
+
+def check_symmetry(A):
+    '''
+    # Checks if a matrix is symmetric
+    ## Parameters
+    - A: The matrix to be checked
+    ## Returns
+    - True if the matrix is symmetric, False otherwise
+    '''
+    for i in range(len(A)):
+        for j in range(len(A[i])):
+            if i != j:
+                if A[i][j] != A[j][i]:
+                    return False
+    return True
+
 #####################################################################################
 #                          Solution of Linear Equations                             
 #####################################################################################
@@ -173,6 +222,319 @@ def gauss_jordan_solve(A,B):
     for i in range(len(augmat)):
         solution.append([augmat[i][-1]]) #Taking last elements into a list to form column matrix
     return solution
+
+
+
+
+'''
+# LU Decomposition Method for solving the equation A.X = B
+'''
+def LU_decompose(A):
+    '''
+    # LU Decomposition of a Matrix
+    '''
+    n = len(A) 
+    if n != len(A[0]): 
+        print('Not square!')
+        return None
+
+    for j in range(n):
+        for i in range(1,n):
+            if i <= j:
+                sum = 0
+                for k in range(0,i):
+                    sum += (A[i][k] * A[k][j])
+                A[i][j] = A[i][j] - sum
+            else:
+                sum = 0
+                for k in range(0,j):
+                    sum += (A[i][k] * A[k][j])
+                A[i][j] = (A[i][j] - sum) / A[j][j]
+    return A
+
+def for_back_LU(A,B):
+    '''
+    # Forward and Backward Substitution for LU Decomposition
+    '''
+    Y = []
+    n = len(B)
+    for i in range(n):
+        s = 0
+        for j in range(i):
+            s += (A[i][j] * Y[j])
+        Y.append(B[i][0]-s)
+    X = Y[:]
+    for i in range(n-1,-1,-1):
+        s = 0
+        for j in range(i + 1, n):
+            s+= (A[i][j] * X[j])
+        X[i] = (Y[i] - s) / A[i][i]
+
+    for i in range(n):
+        X[i] = [X[i]]
+
+    return X
+
+
+def LU_Solve_eqn(A,B):
+    '''
+    # LU Decomposition Method for solving the equation A.X = B
+    '''
+    L=LU_decompose(A)
+    L1=for_back_LU(L,B)
+    return L1
+
+
+
+
+
+
+'''
+# Cholesky Decomposition Method for solving the equation A.X = B
+'''
+def Cholesky_decompose(A):
+
+    if check_symmetry(A) == False:
+        raise ValueError('The matrix is not symmetric')
+      
+    from math import sqrt
+    if len(A) != len(A[0]):
+        return None
+    n = len(A)
+
+    for row in range(n):
+        for col in range(row,n): 
+            if row == col:
+                sum = 0
+                for i in range(row):
+                    sum += (A[row][i] ** 2)
+                A[row][row] = sqrt(A[row][row] - sum)
+            else:
+                sum = 0
+                for i in range(row):
+                    sum += (A[row][i] * A[i][col])
+                A[row][col] = (A[row][col] - sum) / A[row][row]
+                A[col][row] = A[row][col]   
+    for row in range(n):
+        for col in range(row + 1,n):
+            A[row][col] = 0   
+    return A
+
+def sup_chol_dec(A):
+    L=Cholesky_decompose(A)
+    LT=get_transpose(L)
+    LP=[[0 for i in range(len(L))] for i in range(len(L))]
+    for i in range(len(L)):
+        for j in range(len(L)):
+            LP[i][j]=L[i][j]+LT[i][j]
+    for i in range(len(L)):
+        LP[i][i]=LP[i][i]/2
+    return LP    
+
+def Cholesky_solve(A,B):
+    '''
+    # Solving using Cholesky Decomposition
+        Solves the Equation A.X = B
+    ## Parameters
+    - A: The matrix A in the equation A.X = B
+    - B: The matrix B in the equation A.X = B
+    ## Returns
+    - X: The solution of the equation A.X = B
+    '''
+    Y = []
+    n = len(B)
+    for i in range(n):
+        sum = 0
+        for j in range(i):
+            sum += (A[i][j] * Y[j])
+        Y.append((B[i][0]-sum)/A[i][i])
+
+    X = Y
+    for i in range(n-1,-1,-1):
+        sum = 0
+        for j in range(i + 1, n):
+            sum += (A[i][j] * X[j])
+        X[i] = (Y[i] - sum) / A[i][i]
+
+    for i in range(n):
+        X[i] = [X[i]]
+
+    return Y
+
+
+
+
+
+'''
+Solution using Gauss Seidel Method
+'''
+
+def Check_diagonal_dominance(m) :
+    n=len(m)
+    for i in range(0, n) :        
+        sum = 0
+        for j in range(0, n) :
+            sum = sum + abs(m[i][j])    
+        sum = sum - abs(m[i][i])
+        if (abs(m[i][i]) < sum) :
+            return False 
+    return True
+
+def Make_diag_dominant(A,B):
+    '''
+    # Making the matrix A Diagonally Dominant
+    Returns the Diaonally Dominant matrix A and the corresponding B
+    '''
+    n = len(A)
+    for i in range(n):
+        sum=0
+        for j in range(n):
+            if j != i:
+                sum += abs(A[i][j])
+        if abs(A[i][i])>sum:
+            continue
+        else:
+            c = i + 1
+            flag = 0
+            while c<n:
+                sum = 0
+                for j in range(n):
+                    if j != i:
+                        sum += abs(A[c][j])
+                if abs(A[c][i])>sum:
+                    flag = 1
+                    break
+                else:
+                    c+=1
+            if flag==0:
+                return None,None
+            else:
+                A[i],A[c]=A[c],A[i]
+                B[i],B[c]=B[c],B[i]
+    return A,B
+
+
+
+
+def gauss_seidel(A,B,tolerance):
+
+    '''
+    # Gauss Seidel Method
+    Solves the Linear Equation A.X = B using Gauss Seidel Method
+    It does not check for the Diagonal Dominance of the matrix A
+    The limit of the Steps is 200, if the solution is not found in 200 steps, it returns an error message
+    '''
+    n = len(A)
+    X = list([0] for i in range(n))
+    for steps in range(200):
+        flag = 1
+        for i in range(n):
+            sum = 0
+            for j in range(i):
+               sum += (A[i][j] * X[j][0])
+            for j in range(i+1,n):
+                sum += (A[i][j] * X[j][0])
+            temp = (B[i][0] - sum) / (A[i][i])
+            if (abs(temp) - abs(X[i][0])) > tolerance:
+               flag = 0
+            X[i][0] = temp
+        if flag == 1:
+            return X,steps + 1
+    print('Eqn not solved after 200 steps')
+    return None,200
+
+def Gauss_seidel_solve(A,B,T):
+    '''
+    # Gauss Seidel Method
+    This function solves the Linear Equation A.X = B using Gauss Seidel Method
+    Also Checks for Diagonal Dominance of the matrix A. If the matrix is not diagonally dominant, it returns an error message
+    '''
+    if Check_diagonal_dominance(A)==True:
+        return gauss_seidel(A,B,T)
+    else:
+        raise ValueError('The matrix is not diagonally dominant')   
+    
+def inv_mat_GS(A, tolerance, max_steps = 150):
+    '''
+    # Inverse Using Gauss Seidel Method (wrong)
+    '''
+    if len(A) != len(A[0]):
+        raise ValueError('The matrix is not square')
+    
+    A_inv_cols = []
+    
+    for i in range(len(A)):
+        I_col = [[0]] * len(A)
+        I_col[i][0] = 1
+        A_inv_col, _ = Gauss_seidel_solve(A,I_col, tolerance)
+        A_inv_cols.append(A_inv_col)
+    A_inv = np.array(A_inv_cols[0])
+    for i in range(1,len(A)):
+        A_inv = np.append(A_inv,A_inv_cols[i],axis = 1)
+        
+    return A_inv
+
+
+
+
+def Gauss_jacobi_method(A,B,guess,tol):
+    '''
+    # Gauss Jacobi Method
+    Solves the Linear Equation A.X = B using Gauss Jacobi Method
+    '''
+    XK=guess
+    XK1=[[0] for i in range(len(A))]
+    count=0
+    sumaijxj=0
+    flag=0
+    while flag!=1:
+        for i in range(len(XK1)):
+            sumaijxj=0
+            for j in range(len(A[i])):
+                if i!=j:
+                    sumaijxj+=A[i][j]*XK[j][0]    
+            XK1[i][0]=(1/A[i][i])*(B[i][0]-sumaijxj)
+        for i in range(len(A)):
+            if abs(XK[i][0]-XK1[i][0])<tol:
+                flag=1    
+        count+=1
+        for i in range(len(XK1)):
+            XK[i][0]=XK1[i][0]
+    return XK,count
+
+def Gauss_Jacobi_solve(A,B,guess,T):
+
+    '''
+    # Gauss Jacobi Method 
+    This function check for the Diagonal Dominance of the matrix A. 
+    If the matrix is not diagonally dominant, it makes the matrix diagonally dominant and then solves the equation
+    '''
+    if Check_diagonal_dominance(A)==True:
+        return Gauss_jacobi_method(A,B,guess,T)
+    else:
+        print(" The given Matrix was not Diagonallly Dominant") 
+        print(" Made the Matrix Diagonally Dominant and then solved the equation")
+        A,B=Make_diag_dominant(A,B)
+        return Gauss_jacobi_method(A,B,guess,T)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1157,3 +1519,10 @@ def poisson_laplace(rho, x_i, x_f, y_i, y_f, u_iy, u_fy, u_xi, u_xf, N):
     u : array Solution to the Poisson equation
     '''
     return x, y, u
+
+
+
+
+
+
+
