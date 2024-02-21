@@ -477,7 +477,7 @@ def inv_mat_GS(A, tolerance, max_steps = 150):
 
 
 
-def Gauss_jacobi_method(A,B,guess,tol):
+def Gauss_jacobi_method(A: list, B: list,guess: list,tol: float):
     '''
     # Gauss Jacobi Method
     Solves the Linear Equation A.X = B using Gauss Jacobi Method
@@ -516,6 +516,51 @@ def Gauss_Jacobi_solve(A,B,guess,T):
         print(" Made the Matrix Diagonally Dominant and then solved the equation")
         A,B=Make_diag_dominant(A,B)
         return Gauss_jacobi_method(A,B,guess,T)
+
+
+
+
+
+
+def conjugate_gradient(A: list,B: list,guess: list,T: float):
+    '''
+    # Cojugate Gradient Method
+    Solves the Linear Equation A.X = B using Conjugate Gradient Method
+    ## Parameters
+    - A: The matrix A in the equation A.X = B. *A must be a symmetric and positive definite matrix*
+    - B: The matrix B in the equation A.X = B
+    - guess: The initial guess for the solution
+    - T: Tolerance
+    ## Returns
+    - X: The solution of the equation A.X = B
+    - i: Number of iterations required to reach the tolerance
+    '''
+    x0=guess
+    r0 = np.add(B, -1 * np.matmul(A, x0))
+    d0 = np.copy(r0)
+    i=1
+    while True:
+        alpha1 = np.matmul(np.transpose(r0), r0) / np.matmul(np.transpose(d0), np.matmul(A, d0))
+        x1 = np.add(x0, alpha1[0][0]*d0)
+        r1 = np.add(r0, -1 * alpha1[0][0] * np.matmul(A, d0))
+        if np.linalg.norm(r1) < T and i<=len(A):
+            return x1.tolist(),i
+        
+        elif i>len(A):
+            print("Maybe the matrix A dosent satisfy the conditions for the Conjugate Gradient Method")
+            return None
+        else: 
+            beta1 = np.matmul(np.transpose(r1), r1) / np.matmul(np.transpose(r0), r0)
+            d1 = np.add(r1, beta1[0][0] * d0)
+            x0 = x1
+            del x1
+            r0 = r1
+            del r1
+            d0 = d1
+            del d1
+            i+=1
+
+
 
 
 
@@ -754,7 +799,7 @@ def midpoint(f: float,a: float,b: float,n: int):
     h=(b-a)/n
     I=0
     x=a
-    while x<=b:
+    while x<b-h/2:
         I+=h*f(x+h/2)
         x+=h
     return I
@@ -774,7 +819,7 @@ def trapezoidal(f: float,a: float,b: float,n: int):
     h=(b-a)/n
     I=0
     x=a
-    while x<=b:
+    while x<b-h/2:
         I+=h/2*(f(x)+f(x+h))
         x+=h
     return I
