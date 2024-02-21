@@ -454,9 +454,9 @@ def Gauss_seidel_solve(A,B,T):
     else:
         raise ValueError('The matrix is not diagonally dominant')   
     
-def inv_mat_GS(A, tolerance, max_steps = 150):
+def Get_gauss_seidel_inv(A, tolerance):
     '''
-    # Inverse Using Gauss Seidel Method (wrong)
+    # Inverse Using Gauss Seidel Method
     '''
     if len(A) != len(A[0]):
         raise ValueError('The matrix is not square')
@@ -464,14 +464,13 @@ def inv_mat_GS(A, tolerance, max_steps = 150):
     A_inv_cols = []
     
     for i in range(len(A)):
-        I_col = [[0]] * len(A)
+        I_col = np.zeros((len(A),1)).tolist()
         I_col[i][0] = 1
         A_inv_col, _ = Gauss_seidel_solve(A,I_col, tolerance)
         A_inv_cols.append(A_inv_col)
     A_inv = np.array(A_inv_cols[0])
     for i in range(1,len(A)):
-        A_inv = np.append(A_inv,A_inv_cols[i],axis = 1)
-        
+        A_inv = np.append(A_inv,A_inv_cols[i],axis = 1) 
     return A_inv
 
 
@@ -503,7 +502,6 @@ def Gauss_jacobi_method(A: list, B: list,guess: list,tol: float):
     return XK,count
 
 def Gauss_Jacobi_solve(A,B,guess,T):
-
     '''
     # Gauss Jacobi Method 
     This function check for the Diagonal Dominance of the matrix A. 
@@ -516,9 +514,6 @@ def Gauss_Jacobi_solve(A,B,guess,T):
         print(" Made the Matrix Diagonally Dominant and then solved the equation")
         A,B=Make_diag_dominant(A,B)
         return Gauss_jacobi_method(A,B,guess,T)
-
-
-
 
 
 
@@ -559,6 +554,8 @@ def conjugate_gradient(A: list,B: list,guess: list,T: float):
             d0 = d1
             del d1
             i+=1
+
+
 
 
 
@@ -1352,12 +1349,23 @@ def velocity_verlet_solve(a: callable,x0: float,v0: float,t0: float,t_f: float,h
         i+=1
     return xlist,vlist,tlist 
 
-def leap_frog_solve(pi: callable,F: callable,h):
+def leap_frog_solve(F: callable,pi0: float,x_i: float,x_f: float,t_i: float, t_f: float,N: int):
     '''
     # Leap Frog Method
     Used to solve the hamiltons equation of motion
+                    d2x/dt2 = A(x)
     '''
-    pass   
+    t = np.linspace(t_i, t_f, N)
+    h = (t_f - t_i) / N
+    x = np.zeros(N)
+    pi = np.zeros(N)
+    x[0] = x_i
+    pi[0] = pi0
+    Flist=np.array([F(j) for j in t])
+    for i in range(1, N):
+        pi[i] = pi[i-1] + h*Flist[i-1]
+        x[i] = x[i-2] + 2*h*pi[i-1]
+    return t, x, pi
 # LEAP FROG NOT DONE
 
 
@@ -1486,6 +1494,40 @@ def crank_nicolson(g: callable,a: callable, b: callable, x0: float, x_m: float, 
         return x,ulist,[t0 + i*ht for i in range(req_time_step+1)]
     
 
+def du_fort_frankel_solve(g: callable,a: callable,b: callable,x_i: float,x_f: float,t_i: float,t_f: float,Nx: int, Nt: int):
+    '''
+    # Du Fort Frankel Method
+    for solving the heat equation of the form u_xx = k*u_t
+    ## Parameters
+    - g: Initial condition function u(x,t=0) = g(x)
+    - a: Boundary condition function u(x=0,t) = a(t)
+    - b: Boundary condition function u(x=x_m,t) = b(t)
+    - x_i: Initial value of x
+    - x_f: Final value of x
+    - t_i: Initial value of t
+    - t_f: Final value of t
+    - Nx: Number of steps to divide the interval [x_i,x_f]
+    - Nt: Number of steps to divide the interval [t_i,t_f]
+    ## Returns
+    - ulist: List of List of u values
+    - x: List of x values
+    '''
+    hx = (x_f - x_i) / Nx
+    ht = (t_f - t_i) / Nt
+    alpha = ht / (hx**2)
+    x=[(x_i + i*hx) for i in range(0,Nx+1)]
+    ulist = np.zeros((Nx+1,Nt+1))
+    for i in range(Nx+1):
+        ulist[i][0] = g(x[i])
+    for i in range(Nt+1):
+        ulist[0][i] = a(t_i + i*ht)
+        ulist[Nx][i] = b(t_i + i*ht)
+
+    a1 = (1 - 2*alpha)/(1 + 2*alpha)
+    a2 = 2*alpha/(1 + 2*alpha)
+    return ulist
+
+
 #####################################################################################
 #                              Solving Poisson/Laplace Equation                             
 #####################################################################################
@@ -1552,6 +1594,8 @@ def poisson_laplace(rho, x_i, x_f, y_i, y_f, u_iy, u_fy, u_xi, u_xf, N):
                 sum += u_fy(x[i])
             B.append(sum)    
     B = np.array(B)[:,None]
+    A=A.tolist()
+    B=B.tolist()
     u =  gauss_jordan_solve(A,B)
     u = np.array(u).reshape((N,N))
     u = np.append(u_iy(y[1:-1,None]), u, axis = 1)
@@ -1566,7 +1610,18 @@ def poisson_laplace(rho, x_i, x_f, y_i, y_f, u_iy, u_fy, u_xi, u_xf, N):
     return x, y, u
 
 
+#####################################################################################
+#                              Solving Wave Equation
+#####################################################################################
 
+def wave_solve(x0,t0,u0,hx,ht,k=1):
+    '''
+    # Wave Equation Solver
+    This solves the equation of the form u_xx = k*u_tt
+    '''
+    alpha = (ht / (hx**2))
+
+    pass
 
 
 

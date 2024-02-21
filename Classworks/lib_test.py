@@ -3,16 +3,19 @@ from Library_Classworks import *
 
 
 
-A = [[2,-1,0],[-1,2,-1],[0,-1,2]]
+def F(x):
+    return -x
 
-B = [[-1],[4],[3]]
+x_i = 0
+x_f = 10
+t_i = 0
+t_f = 10
+N = 100
 
-guess = [[1.2],[0.1],[0.2]]
+
+t,x,pi = leap_frog_solve(F, 4,x_i, x_f, t_i, t_f, N)
 
 
-print(conjugate_gradient(A,B,guess,0.001))
-
-# def f(x):
-#     return 4*x**2 + 3*x
-
-# print(simpsons(f,0,10,5000))
+import matplotlib.pyplot as plt
+plt.plot(t,x)
+plt.show()
