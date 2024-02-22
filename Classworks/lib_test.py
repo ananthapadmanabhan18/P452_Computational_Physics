@@ -68,7 +68,7 @@ def f0(x):
     return 2*np.sin(np.pi*x)
 
 def f_before(x):
-    return 2*np.sin(np.pi*x)
+    return 2*np.sin(np.pi*x+2)
 
 xi = 0
 xf = 4
