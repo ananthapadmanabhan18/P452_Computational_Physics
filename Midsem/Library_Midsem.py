@@ -604,6 +604,15 @@ def bracket(a0: float,b0: float,f: callable):
             a0=a0-1.5*(b0-a0)       
     return(a0,b0)
 
+def check_bra(a,b,f):
+    if f(a)*f(b)<0:
+        return True
+    else:
+        return False   
+
+
+
+
 
 def bisection(f: float,a0: float,b0: float,T: float,ifbracket: bool=False):
     '''
@@ -649,13 +658,15 @@ def newton_raphson_single(f: callable,fd: callable,x0: float,T: float):
     count=0
     xn=x0
     xn1=xn-(f(xn)/fd(xn))
+    xnlist=[xn1]
     while True:
         xn=xn1
         xn1=xn-(f(xn)/fd(xn)) 
         count+=1
         if abs(xn1-xn)<T:
-            break          
-    return xn1,count+1  
+            break
+        xnlist.append(xn1)          
+    return xn1,count,xnlist
 
 
 def secant_method(f: float,x0: float,x1: float,tol: float):
@@ -719,6 +730,68 @@ def regula_falsi(f,a0,b0,T,ifbracket=False):
             break 
         count+=1
     return c0,count
+
+
+def regula_falsi_for_misdem(a0,b0,f,T):
+    epsilon=T
+    #a0,b0=bracket(a0,b0,f)
+    for i in range(0,1):
+        c0=b0-(((b0-a0)*f(b0))/(f(b0)-f(a0)))
+        cold=c0  
+        if f(a0)*f(c0)<0:
+            b0=c0       
+        else:    
+            a0=c0 
+    count=1
+    while True:
+        cold=c0
+        c0=b0-(((b0-a0)*f(b0))/(f(b0)-f(a0)))
+        if f(a0)*f(c0)<0:
+            b0=c0       
+        else:    
+           a0=c0 
+        if abs(cold-c0)<epsilon:
+            break 
+        count+=1
+    return c0,count
+
+
+
+
+
+
+def regula_falsi_for_midsem_returns_list(a0,b0,f,T):
+    epsilon=T
+    #a0,b0=bracket(a0,b0,f)
+    ilist=[]
+    for i in range(0,1):
+        c0=b0-(((b0-a0)*f(b0))/(f(b0)-f(a0)))
+        cold=c0  
+        if f(a0)*f(c0)<0:
+            b0=c0       
+        else:    
+            a0=c0 
+
+    count=1
+    ilist.append(c0)
+    while True:
+        cold=c0
+        c0=b0-(((b0-a0)*f(b0))/(f(b0)-f(a0)))
+        if f(a0)*f(c0)<0:
+            b0=c0       
+        else:    
+           a0=c0 
+        if abs(cold-c0)<epsilon:
+            break 
+        count+=1
+        ilist.append((c0))
+    return ilist
+
+
+
+
+
+
 
 def fixed_point_single(g: float,x0: float,tol: float):
     '''
