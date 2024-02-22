@@ -816,27 +816,36 @@ def trapezoidal(f: float,a: float,b: float,n: int):
     h=(b-a)/n
     I=0
     x=a
-    while x<b-h/2:
-        I+=h/2*(f(x)+f(x+h))
+    while x<b:
+        I+=(h/2)*(f(x)+f(x+h))
         x+=h
     return I
 
-def simpsons(f: float,a: float,b: float,n: int):
+
+def simpsons(f: callable,a: float, b: float, n: int):
     '''
     # Simpson's Method
     ## Parameters
     - f: Function to be integrated
     - a: Lower limit of the integral
     - b: Upper limit of the integral
-    - n: Number of intervals
-    '''
+    - n: Number of intervals (must be even for getting accurate results)
+    '''    
+    if n%2!=0:
+        print("Value obtained maynot be accurate as n is not even. Please enter an even value of n.")
     h=(b-a)/n
-    I=0
-    x=a
-    while x<=b:
-        I+=h/3*(f(x)+4*f(x+h/2)+f(x+h))*0.5
-        x+=h
-    return I
+    k=0.0
+    x=a + h
+    for i in range(1,int(n/2) + 1):
+        k += 4*f(x)
+        x += 2*h
+
+    x = a + 2*h
+    for i in range(1,int(n/2)):
+        k += 2*f(x)
+        x += 2*h
+    return (h/3)*(f(a)+f(b)+k)
+
 
 class Gaussian_Quadrature: 
     '''
@@ -1353,20 +1362,21 @@ def leap_frog_solve(F: callable,pi0: float,x_i: float,x_f: float,t_i: float, t_f
     '''
     # Leap Frog Method
     Used to solve the hamiltons equation of motion
-                    d2x/dt2 = A(x)
+                    d2x/dt2 = A(x,t)
     '''
-    t = np.linspace(t_i, t_f, N)
-    h = (t_f - t_i) / N
-    x = np.zeros(N)
-    pi = np.zeros(N)
+    t = np.linspace(t_i, t_f, 2*N)
+    dt = (t_f - t_i) / N
+    x = np.zeros(2*N)
+    pi = np.zeros(2*N)
     x[0] = x_i
     pi[0] = pi0
-    Flist=np.array([F(j) for j in t])
-    for i in range(1, N):
-        pi[i] = pi[i-1] + h*Flist[i-1]
-        x[i] = x[i-2] + 2*h*pi[i-1]
-    return t, x, pi
+    pi[1] = pi[0] - dt*F(x[0],t[0])
+    x[2] = x[0] + dt*pi[1]
+
+    return pi
+
 # LEAP FROG NOT DONE
+
 
 
 #####################################################################################
