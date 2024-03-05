@@ -548,7 +548,7 @@ def Gauss_Jacobi_solve(A,B,guess,T):
 
 
 
-def conjugate_gradient(A: list,B: list,guess: list,T: float):
+def conjugate_gradient_solve(A: list,B: list,guess: list,T: float):
     '''
     # Cojugate Gradient Method
     Solves the Linear Equation A.X = B using Conjugate Gradient Method
