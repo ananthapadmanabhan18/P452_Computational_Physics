@@ -1,0 +1,37 @@
+{
+ "cells": [
+  {
+   "kind": 2,
+   "value": "A = {{2, -3, 0, 0, 0, 0},\r\n     {-1, 4, -1, 0, -1, 0},\r\n     {0, -1, 4, 0, 0, -1},\r\n     {0, 0, 0, 2, -3, 0},\r\n     {0, -1, 0, -1, 4, -1},\r\n     {0, 0, -1, 0, -1, 4}};\r\n\r\nB = {{-5/3}, {2/3}, {3}, {-4/3}, {-1/3}, {5/3}};\r\n\r\nx = LinearSolve[A, B]\r\n",
+   "languageId": "wolfram",
+   "outputs": [
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>3</w></w></w></wfrac></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wfrac><w><w>1</w></w><w><w></w><w><w>3</w></w></w></wfrac><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><w>1</w><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wrow><w></w><w>-</w><wfrac><w><w>2</w></w><w><w></w><w><w>3</w></w></w></wfrac></wrow><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><w>0</w><wb>}</wb></wrow><w>,</w><wrow><w></w><wb>{</wb><wfrac><w><w>2</w></w><w><w></w><w><w>3</w></w></w></wfrac><wb>}</wb></wrow></wrow><wb>}</wb></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "{{-1/3}, {1/3}, {1}, {-2/3}, {0}, {2/3}}",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "48e1f0f2-b4bb-479a-b45b-609651fb534a",
+     "metadata": {
+      "cellLabel": "Out[33]= ",
+      "isBoxData": false
+     }
+    }
+   ],
+   "metadata": {},
+   "executionSummary": {
+    "timing": {
+     "startTime": 1709832581503,
+     "endTime": 1709832581847
+    },
+    "executionOrder": 31,
+    "success": true
+   }
+  }
+ ]
+}
