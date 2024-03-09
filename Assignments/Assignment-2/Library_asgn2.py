@@ -307,7 +307,8 @@ def LU_Solve_eqn(A,B):
     '''
     # LU Decomposition Method for solving the equation A.X = B
     '''
-    A,B = make_diag_non_0(A,B)
+    # A,B = make_diag_non_0(A,B)
+    A,B = Make_diag_dominant(A,B)
     L=LU_decompose(A)
     L1=for_back_LU(L,B)
     return L1

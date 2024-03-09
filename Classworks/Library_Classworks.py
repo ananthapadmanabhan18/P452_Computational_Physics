@@ -1185,15 +1185,15 @@ def RK4_solve_coupled(fnlist,x0,y0s,limit,h):
     return datT, datY
 
 
-def shooting_solve(fns,x0,y0,x1,y1,guess1,tol,h):  
+def shooting_solve(fns,x0,y0,x1,y1,tol,h,guess1=0):  
     '''
     # Shooting Method
     ## Parameters
     - fns: List of functions to be solved that is dy_i/dx = f_i(x,t) where x is a list of variables.
-    - x0: first initial value of t or x (acc to qn)
-    - y0: first value of the solution at x0
-    - x1: second final value of t or x (acc to qn)
-    - y1: second value of the solution at x1
+    - x0: i nitial value of t or x (acc to qn)
+    - y0: v alue of the solution at x0
+    - x1: final value of t or x (acc to qn)
+    - y1: value of the solution at x1
     - guess1: The initial guess for the second variable
     - tol: The tolerance for the solution
     - h: step size
@@ -1201,6 +1201,9 @@ def shooting_solve(fns,x0,y0,x1,y1,guess1,tol,h):
     - X: List of x values or t values
     - Y: List of List of y values for each variable y_i
     '''  
+    if guess1 == 0:
+        guess1 = (y1-y0)/(x1-x0)
+
     X,Y = RK4_solve_coupled(fns,x0,[y0,guess1],x1,h)
     ye1 = Y[0][-1]
     if abs(ye1 - y1) < tol:
@@ -1243,6 +1246,41 @@ def shooting_solve(fns,x0,y0,x1,y1,guess1,tol,h):
             guess2 = newguess
             ye2 = yvalnew
     return X,Y
+
+
+def finite_element_solve(f: callable,x_i: float, y_i:float,x_f: float,y_f: float,y_f_prime: float, N: int):
+    '''
+    # Finite Element Method
+    for solving the differential equation d2y/dx2 = f(x,y) with boundary conditions y(x_i) = y_i and y'(x_f) = y_f
+    ## Parameters
+    - f: The function f(x,y) in the differential equation
+    - x_i: Initial value of x
+    - y_i: Initial value of y
+    - x_f: Final value of x
+    - y_f: Final value of y
+    - y_f_prime: value of y' at x=x_i
+    - N: Number of steps to divide the interval [x_i,x_f]
+    ## Returns
+    - x: List of x values
+    - y: List of y values
+    '''
+    x = np.linspace(x_i, x_f, N+1)
+    h = (x_f - x_i) / (N+1)
+    A = 2*np.eye(N-1) + np.diagflat([-1 for i in range(N-2)],-1) + np.diagflat([-1 for i in range(N-2)],1)
+    A = A.tolist()
+    B = []
+    for i in range(len(A)):
+        if i == 0:
+            B.append([(-h**2)*f(x[i],y_i)  + y_i])
+        elif i == len(A)-1:
+            B.append(f(x[i],y_f) - y_f)
+    return A,None
+    #not complete
+
+
+
+
+
 
 
 
