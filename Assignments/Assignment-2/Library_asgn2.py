@@ -38,6 +38,38 @@ def print_matrix(matrix):
             print("\t",element, end="\t")
         print()
 
+def read_matrices(filename: str,delimiter: str = '\t'):
+    '''
+    Reading matrices from a file
+
+    # Parameters
+    - filename: The name of the file from which the matrices are to be read
+    # Returns
+    - The list of matrices read from the file seperated from "#"
+    '''
+    matrices = []
+    current_matrix = []
+
+    with open(filename, 'r') as file:
+        for line in file:
+            line = line.strip()  
+            if not line or line.startswith("#"):
+                if current_matrix: 
+                    matrices.append(current_matrix)
+                    current_matrix = []  
+                continue
+            
+            try:
+                row = [float(num) for num in line.split(delimiter)]
+                current_matrix.append(row)
+            except ValueError:
+                # print("Skipping non-numeric line:", line)
+                pass
+        if current_matrix:
+            matrices.append(current_matrix)
+    return matrices
+
+
 
 def matrix_copy(A1):
     '''
