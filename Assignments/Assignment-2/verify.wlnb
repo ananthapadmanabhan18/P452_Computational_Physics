@@ -2,9 +2,26 @@
  "cells": [
   {
    "kind": 2,
-   "value": "A = {{2, -3, 0, 0, 0, 0},\r\n     {-1, 4, -1, 0, -1, 0},\r\n     {0, -1, 4, 0, 0, -1},\r\n     {0, 0, 0, 2, -3, 0},\r\n     {0, -1, 0, -1, 4, -1},\r\n     {0, 0, -1, 0, -1, 4}};\r\n\r\nB = {{-5/3}, \r\n     {2/3}, \r\n     {3}, \r\n     {-4/3}, \r\n     {-1/3}, \r\n     {5/3}\r\n     };\r\n\r\n\r\n\"( A + AT )/2 = \"\r\n(A+Transpose[A])/2 // MatrixForm\r\n\r\n\r\nM = (Transpose[A].A + A^2)/2;\r\n\r\nM.A // MatrixForm\r\n",
+   "value": "A = {{-0.96,0,5, 0.,0.,0.,}\r\n { 0.5,-0.96,0.5, 0.,0.,}\r\n { 0.,0.5,-0.96,0.5, 0.,}\r\n { 0.,0.,0.5,-0.96,0.5 }\r\n { 0.,0.,0,0.5,-0.96}};\r\n\r\nB = {{-5/3}, \r\n     {2/3}, \r\n     {3}, \r\n     {-4/3}, \r\n     {-1/3}, \r\n     {5/3}\r\n     };\r\n\r\n\r\n\"( A + AT )/2 = \"\r\n(A+Transpose{A})/2 // MatrixForm\r\n\r\n\r\nM = (Transpose{A}.A + A^2)/2;\r\n\r\nM.A // MatrixForm\r\n",
    "languageId": "wolfram",
    "outputs": [
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    {-0.96, 0, 5, 0., 0., 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0., 0, 0.5, -0.96} cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    {-0.96, 0, 5, 0., 0., 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0., 0, 0.5, -0.96} cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "98b51b73-a29f-41d2-814a-1dac424b5203",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
     {
      "items": [
       {
@@ -16,43 +33,196 @@
        "mime": "text/plain"
       }
      ],
-     "id": "9eabba02-3429-47e8-b32c-711d6c9d0afb",
+     "id": "fd0694c7-d4a9-419f-b48b-b2f4bc2192d9",
      "metadata": {
-      "cellLabel": "Out[182]= ",
+      "cellLabel": "Out[3]= ",
       "isBoxData": false
      }
     },
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><w>2</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>4</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>4</w></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><w>0</w></w><w><w>2</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>2</w></wrow></w><w><w>4</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>0</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>4</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    Transpose {0., 0., 0, 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0, 5, 0., 0., 0., Null} cannot be combined.</pre>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{2, -2, 0, 0, 0, 0}, {-2, 4, -1, 0, -1, 0}, {0, -1, 4, 0, 0, -1}, {0, 0, 0, 2, -2, 0}, {0, -1, 0, -2, 4, -1}, {0, 0, -1, 0, -1, 4}}]",
+       "data": "Thread::tdlen: Objects of unequal length in \n    Transpose {0., 0., 0, 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0, 5, 0., 0., 0., Null} cannot be combined.",
        "mime": "text/plain"
       }
      ],
-     "id": "cc27afe4-7e45-4e17-a1b2-16a9be0a8fb6",
+     "id": "6083b6c0-41ac-4dc6-bc5b-4eab92d874d9",
      "metadata": {
-      "cellLabel": "Out[183]//MatrixForm= ",
+      "cellLabel": "",
       "isBoxData": false
      }
     },
     {
      "items": [
       {
-       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(6,max-content);\"><w><wfrac><w><w>19</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>33</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>61</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>213</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>73</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>9</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>38</w></wrow></w><w><w>11</w></w><w><wfrac><w><w>9</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>67</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><w>75</w></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>11</w></w><w><wrow><w></w><w>-</w><w>32</w></wrow></w><w><wrow><w></w><w>-</w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><wfrac><w><w>19</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>33</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>5</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wfrac><w><w>9</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><w>38</w></wrow></w><w><w>11</w></w><w><wrow><w></w><w>-</w><wfrac><w><w>61</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wfrac><w><w>213</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>73</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><wrow><w></w><w>-</w><w>1</w></wrow></w><w><w>11</w></w><w><wrow><w></w><w>-</w><w>32</w></wrow></w><w><wfrac><w><w>9</w></w><w><w></w><w><w>2</w></w></w></wfrac></w><w><wrow><w></w><w>-</w><wfrac><w><w>67</w></w><w><w></w><w><w>2</w></w></w></wfrac></wrow></w><w><w>75</w></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
+       "data": "<div class=\"wexpr\"><wrow><w></w><wb>(</wb><w>⁠</w><wgrid style=\"grid-template-columns:repeat(1,max-content);\"><w><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0</w><w>,</w><w>5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow></wrow><w>+</w><wrow><w></w><w>Transpose</w><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0</w><w>,</w><w>5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow></wrow></wrow><wb>)</wb></wrow></wrow></w></wgrid><w>⁠</w><wb>)</wb></wrow></div>",
        "mime": "x-application/wolfram-language-html"
       },
       {
-       "data": "MatrixForm[{{19/2, -33/2, 5/2, -1/2, 5/2, -1}, {-61/2, 213/2, -73/2, 9/2, -38, 11}, {9/2, -67/2, 75, -1, 11, -32}, {-1/2, 5/2, -1, 19/2, -33/2, 5/2}, {9/2, -38, 11, -61/2, 213/2, -73/2}, {-1, 11, -32, 9/2, -67/2, 75}}]",
+       "data": "MatrixForm[{{({0., 0., 0, 0.5, -0.96}*{0., 0., 0.5, -0.96, 0.5}*{0., 0.5, -0.96, 0.5, 0., Null}*{0.5, -0.96, 0.5, 0., 0., Null}*{-0.96, 0, 5, 0., 0., 0., Null} + Transpose*{0., 0., 0, 0.5, -0.96}*{0., 0., 0.5, -0.96, 0.5}*{0., 0.5, -0.96, 0.5, 0., Null}*{0.5, -0.96, 0.5, 0., 0., Null}*{-0.96, 0, 5, 0., 0., 0., Null})/2}}]",
        "mime": "text/plain"
       }
      ],
-     "id": "6239a02d-4ae5-4a08-964f-96f79176d0af",
+     "id": "874a3d00-9865-4452-a536-4aafd4f256e0",
      "metadata": {
-      "cellLabel": "Out[185]//MatrixForm= ",
+      "cellLabel": "Out[4]//MatrixForm= ",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    {0., 0., 0., 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0., 5., 0., 0., 0., Null} cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    {0., 0., 0., 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0., 5., 0., 0., 0., Null} cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "1266b5b2-cd5c-4859-a1a5-efee91d7a83b",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    {0., 0., 0., 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0., 5., 0., 0., 0., Null} cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    {0., 0., 0., 0.5, -0.96} {0., 0., 0.5, -0.96, 0.5} \n     {0., 0.5, -0.96, 0.5, 0., Null} {0.5, -0.96, 0.5, 0., 0., Null} \n     {-0.96, 0., 5., 0., 0., 0., Null} cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "6cdb6d25-ff66-4b9d-a71d-a2bd58a0bdf2",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    {0., 0., 0, 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                     2\n     {0.9216, 0, 25, 0., 0., 0., Null } cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    {0., 0., 0, 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                     2\n     {0.9216, 0, 25, 0., 0., 0., Null } cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "ab3214ac-102f-46d7-a731-131d84da48d5",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">General::stop</span>: Further output of Thread::tdlen\n     will be suppressed during this calculation.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "General::stop: Further output of Thread::tdlen\n     will be suppressed during this calculation.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "a0bde561-547f-407c-9b43-af4c403b8efe",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    {0., 0., 0., 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                       2\n     {0.9216, 0., 25., 0., 0., 0., Null } cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    {0., 0., 0., 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                       2\n     {0.9216, 0., 25., 0., 0., 0., Null } cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "8f8dd09f-180a-4411-a958-e3c05b28dfc7",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in \n    Transpose {0., 0., 0., 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                       2\n     {0.9216, 0., 25., 0., 0., 0., Null } cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "Thread::tdlen: Objects of unequal length in \n    Transpose {0., 0., 0., 0.25, 0.9216} {0., 0., 0.25, 0.9216, 0.25} \n                                      2                                   2\n     {0., 0.25, 0.9216, 0.25, 0., Null } {0.25, 0.9216, 0.25, 0., 0., Null } \n                                       2\n     {0.9216, 0., 25., 0., 0., 0., Null } cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "39e75026-0252-4d4d-a375-7322a822ed87",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre>                                            {0., 0., 0, 0.5, -0.96} &lt;&lt;5&gt;&gt;\n<span class=\"wl-message\">Thread::tdlen</span>: Objects of unequal length in -----------------------------\n                                                          2\n     cannot be combined.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "                                            {0., 0., 0, 0.5, -0.96} <<5>>\nThread::tdlen: Objects of unequal length in -----------------------------\n                                                          2\n     cannot be combined.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "9d29d14e-0d78-4c45-b743-632d3a50dc0a",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<pre><span class=\"wl-message\">General::stop</span>: Further output of Thread::tdlen\n     will be suppressed during this calculation.</pre>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "General::stop: Further output of Thread::tdlen\n     will be suppressed during this calculation.",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "4b3f757c-3e10-4895-8bfc-13dadb5e3fb5",
+     "metadata": {
+      "cellLabel": "",
+      "isBoxData": false
+     }
+    },
+    {
+     "items": [
+      {
+       "data": "<div class=\"wexpr\"><wrow><w></w><wfrac><w><w>1</w></w><w><w></w><w><w>2</w></w></w></wfrac><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.5</w><w>,</w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0.5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><wrow><w></w><w>-</w><w>0.96</w></wrow><w>,</w><w>0</w><w>,</w><w>5</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>Null</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>(</wb><wrow><w></w><wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.9216</w><w>,</w><w>0</w><w>,</w><w>25</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow></wrow><w>+</w><wrow><w></w><w>Transpose</w><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.</w><w>,</w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.25</w><w>,</w><w>0.9216</w><w>,</w><w>0.25</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow><w></w><wrow><w></w><wb>{</wb><wrow><w></w><w>0.9216</w><w>,</w><w>0</w><w>,</w><w>25</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><w>0.</w><w>,</w><wsup><w></w><w>Null</w><w><w>2</w></w></wsup></wrow><wb>}</wb></wrow></wrow></wrow><wb>)</wb></wrow></wrow></div>",
+       "mime": "x-application/wolfram-language-html"
+      },
+      {
+       "data": "MatrixForm[({0., 0., 0, 0.5, -0.96}*{0., 0., 0.5, -0.96, 0.5}*{0., 0.5, -0.96, 0.5, 0., Null}*{0.5, -0.96, 0.5, 0., 0., Null}*{-0.96, 0, 5, 0., 0., 0., Null}*({0., 0., 0, 0.25, 0.9216}*{0., 0., 0.25, 0.9216, 0.25}*{0., 0.25, 0.9216, 0.25, 0., Null^2}*{0.25, 0.9216, 0.25, 0., 0., Null^2}*{0.9216, 0, 25, 0., 0., 0., Null^2} + Transpose*{0., 0., 0, 0.25, 0.9216}*{0., 0., 0.25, 0.9216, 0.25}*{0., 0.25, 0.9216, 0.25, 0., Null^2}*{0.25, 0.9216, 0.25, 0., 0., Null^2}*{0.9216, 0, 25, 0., 0., 0., Null^2}))/2]",
+       "mime": "text/plain"
+      }
+     ],
+     "id": "254ade3d-155b-4606-9bfd-e59e918e2dab",
+     "metadata": {
+      "cellLabel": "Out[6]//MatrixForm= ",
       "isBoxData": false
      }
     }
@@ -60,10 +230,10 @@
    "metadata": {},
    "executionSummary": {
     "timing": {
-     "startTime": 1710222182001,
-     "endTime": 1710222182733
+     "startTime": 1710438455852,
+     "endTime": 1710438458361
     },
-    "executionOrder": 180,
+    "executionOrder": 1,
     "success": true
    }
   }
