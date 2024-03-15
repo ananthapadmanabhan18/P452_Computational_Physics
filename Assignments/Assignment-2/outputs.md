@@ -1,3 +1,4 @@
+<hr>
 <h1> Question - 1 Outputs</h1>
 
 
@@ -16,7 +17,7 @@ The solution of the syatem of the linear equations are tabluated below:
 +----------+----------+--------------+
 The Number of Iterations for Gauss Seidel Method is:  16
 
-
+<hr>
 <h1> Question - 2 Outputs</h1>
 
 The solution of the syatem of the linear equations are tabluated below:
@@ -32,7 +33,7 @@ The solution of the syatem of the linear equations are tabluated below:
 +----------+--------------+------------------+
 
 
-
+<hr>
 <h1> Question - 3 Outputs</h1>
 
 The Number of Iterations for Conjugate Gradient Method is 6 which is same as the length of the A
