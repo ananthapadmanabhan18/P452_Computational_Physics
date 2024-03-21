@@ -1,3 +1,5 @@
 Roughs/
 # Classworks/lib_test.py
 Books/
+.vscode/
+__pycache__/
