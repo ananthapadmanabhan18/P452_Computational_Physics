@@ -1712,3 +1712,30 @@ def power_method_find(A :list,x0: list,tol = 1e-6):
     eigvec = eigvec/norm
     return eigval,eigvec,i  
 
+
+
+def QR_factorize(A: list):
+    '''
+    # QR Factorization
+    This function finds the QR factorization of a matrix A
+
+    ## Parameters
+    - A: The matrix to be factorized
+    ## Returns
+    - Q: The orthogonal matrix
+    - R: The upper triangular matrix
+    '''
+    m, n = A.shape
+    Q = np.zeros((m, n))
+    R = np.zeros((n, n))
+
+    for j in range(n):
+        v = A[:, j]
+        for i in range(j):
+            R[i, j] = np.dot(Q[:, i], A[:, j])
+            v = v - R[i, j] * Q[:, i]
+        R[j, j] = np.linalg.norm(v)
+        Q[:, j] = v / R[j, j]
+
+    return Q, R
+
