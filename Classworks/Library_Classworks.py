@@ -1712,3 +1712,119 @@ def power_method_find(A :list,x0: list,tol = 1e-6):
     eigvec = eigvec/norm
     return eigval,eigvec,i    
 
+
+def QR_factorize(A: list):
+    '''
+    # QR Factorization
+    This function finds the QR factorization of a matrix A
+
+    ## Parameters
+    - A: The matrix to be factorized
+    ## Returns
+    - Q: The orthogonal matrix
+    - R: The upper triangular matrix
+    '''
+    m, n = A.shape
+    Q = np.zeros((m, n))
+    R = np.zeros((n, n))
+
+    for j in range(n):
+        v = A[:, j]
+        for i in range(j):
+            R[i, j] = np.dot(Q[:, i], A[:, j])
+            v = v - R[i, j] * Q[:, i]
+        R[j, j] = np.linalg.norm(v)
+        Q[:, j] = v / R[j, j]
+
+    return Q, R
+
+
+
+
+    
+#####################################################################################
+#                                 Data Fitting                             
+#####################################################################################
+
+def linear_fit(xlist: list,ylist: list,elist: list):
+    '''
+    # Linear Regression
+    This function finds the best fit line for a given set of data points
+    Finds the fit for the equation y = a + bx
+    ## Parameters
+    - xlist: The x-coordinates of the data points
+    - ylist: The y-coordinates of the data points
+    - elist: The error in the y-coordinates of the data points. If elist=False, the function will assume that the error is 1 for all data points
+    ## Returns
+    - slope: The slope of the best fit line
+    - intercept: The y-intercept of the best fit line
+    - chi_sq: The chi-squared value of the best fit line
+    '''
+    # Raise an error if the lengths of xlist, ylist, and elist are not the same
+    if len(xlist) != len(ylist):
+        raise ValueError('The length of xlist, ylist, and elist must be the same')
+    
+    # If elist is False, assume that the error is 1 for all data points
+    if elist == False:
+        elist = [1]*len(xlist)
+    # Convert the lists to numpy arrays
+    xlist = np.array(xlist)
+    ylist = np.array(ylist)
+    elist = np.array(elist)
+    n=len(xlist)
+    # Calculate the sums
+    S=np.sum(1/((elist)**2))
+    Sx = np.sum(xlist/((elist)**2))
+    Sy = np.sum(ylist/((elist)**2))
+    Sxx = np.sum((xlist**2)/((elist)**2))
+    Syy = np.sum((ylist**2)/((elist)**2))
+    Sxy = np.sum((xlist*ylist)/((elist)**2))
+
+    # Calculate the slope and intercept
+    Delta = S*Sxx - Sx**2
+
+    intercept=(Sxx*Sy-Sx*Sxy)/Delta
+    slope=(S*Sxy-Sx*Sy)/Delta
+    # Calculate the error in the slope and intercept
+    # error_intercept = np.sqrt(Sxx/Delta)
+    # error_slope = np.sqrt(S/Delta)
+    # cov = -Sx/Delta
+    # Pearsen's correlation coefficient
+    r_sq = Sxy/np.sqrt(Sxx*Syy) 
+
+    return slope,intercept,np.sqrt(r_sq)
+
+
+def polynomial_fit(xlist: list,ylist: list,sigma_list: list,degree: int):
+    '''
+    # Polynomial Fitting
+    This function finds the best fit polynomial for a given set of data points
+    Finds the fit for the equation y = a0 + a1*x + a2*x^2 + ... + an*x^n
+    ## Parameters
+    - xlist: The x-coordinates of the data points
+    - ylist: The y-coordinates of the data points
+    - sigma_list: The error in the y-coordinates of the data points
+    - degree: The degree of the polynomial to be fit
+    ## Returns
+    - a: The coefficients of the best fit polynomial
+    '''
+    xlist = np.array(xlist)
+    ylist = np.array(ylist)
+    sigma_list = np.array(sigma_list)
+    A_matrix = np.zeros((degree+1,degree+1))
+
+    for i in range(degree+1):
+        for j in range(degree+1):
+            A_matrix[i][j] = np.sum((xlist**(i+j))/(sigma_list**2))
+    B_matrix = np.zeros(degree+1)
+    for i in range(degree+1):
+        B_matrix[i] = np.sum((ylist*(xlist**i))/(sigma_list**2))
+    a = np.linalg.solve(A_matrix,B_matrix)
+    return a
+
+
+
+
+
+
+
