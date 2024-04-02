@@ -1749,30 +1749,62 @@ def power_method_find(A :list,x0: list,tol = 1e-6):
 
 
 
-def QR_factorize(A: list):
-    '''
-    # QR Factorization
-    This function finds the QR factorization of a matrix A
+# def QR_factorize(A: list):
+#     '''
+#     # QR Factorization
+#     This function finds the QR factorization of a matrix A
 
-    ## Parameters
-    - A: The matrix to be factorized
-    ## Returns
-    - Q: The orthogonal matrix
-    - R: The upper triangular matrix
-    '''
-    m, n = A.shape
-    Q = np.zeros((m, n))
-    R = np.zeros((n, n))
+#     ## Parameters
+#     - A: The matrix to be factorized
+#     ## Returns
+#     - Q: The orthogonal matrix
+#     - R: The upper triangular matrix
+#     '''
+#     m, n = A.shape
+#     Q = np.zeros((m, n))
+#     R = np.zeros((n, n))
 
-    for j in range(n):
-        v = A[:, j]
-        for i in range(j):
-            R[i, j] = np.dot(Q[:, i], A[:, j])
-            v = v - R[i, j] * Q[:, i]
-        R[j, j] = np.linalg.norm(v)
-        Q[:, j] = v / R[j, j]
+#     for j in range(n):
+#         v = A[:, j]
+#         for i in range(j):
+#             R[i, j] = np.dot(Q[:, i], A[:, j])
+#             v = v - R[i, j] * Q[:, i]
+#         R[j, j] = np.linalg.norm(v)
+#         Q[:, j] = v / R[j, j]
 
-    return Q, R
+#     return Q, R
+
+
+def QR_factorize(A):
+    A = np.array(A) if type(A) != np.ndarray else A
+    Q = np.zeros(A.shape)
+    R = np.zeros(A.shape)
+    for i in range(A.shape[1]):
+        u_i = A[:,i]
+        sum = 0
+        for j in range(i):
+            sum += np.dot(A[:,i],Q[:,j])*Q[:,j]
+        u_i = u_i - sum
+        Q[:,i] = u_i/np.linalg.norm(u_i)
+        for j in range(i+1):
+            R[j,i] = np.dot(A[:,i],Q[:,j])
+            
+    return Q,R
+
+def find_eigen_val_QR(A,tolerance = 1e-6):
+    A = np.array(A)
+    copy_A = np.copy(A)
+    Q,R = QR_factorize(A)
+    A = np.matmul(R,Q)
+    i=1
+    while np.linalg.norm(A-copy_A)>tolerance:
+        copy_A = np.copy(A)
+        Q,R = QR_factorize(A)
+        A = np.matmul(R,Q)
+        i+=1
+    return np.diag(A),i
+
+
 
 
 
@@ -1861,6 +1893,6 @@ def polynomial_fit(xlist: list,ylist: list,sigma_list: list,degree: int,tol=1e-6
         B_matrix[i] = np.sum((ylist*(xlist**i))/(sigma_list**2))
     # a = Gauss_seidel_solve(A_matrix.tolist(),B_matrix.tolist(),T=tol)
     a = np.linalg.solve(A_matrix,B_matrix)    
-    return a
+    return a,A_matrix
 
 
