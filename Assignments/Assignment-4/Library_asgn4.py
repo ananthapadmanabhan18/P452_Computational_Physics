@@ -983,7 +983,7 @@ class Gaussian_Quadrature:
 
 
 
-def monte_carlo_integrate(f: float,a: float,b: float,N: int,seed: int):
+def monte_carlo_integrate(f: float,a: float,b: float,N: int,seed: int,multiplier: float,m: float,c: float):
     '''
     # Monte Carlo Integration
     ## Parameters
@@ -995,7 +995,7 @@ def monte_carlo_integrate(f: float,a: float,b: float,N: int,seed: int):
     ## Returns
     - F: The value of the integral
     '''
-    p=rng(seed)
+    p=rng(seed,m=m,c=c,a=multiplier)
     F=0
     for i in range(N):
         k=p.gen()
