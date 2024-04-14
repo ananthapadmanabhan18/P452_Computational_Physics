@@ -25,6 +25,10 @@ class rng():
             RNs.append(self.term / self.m)
         return RNs  
 
+
+
+
+
 #####################################################################################
 #                               Matrix Operations                             
 #####################################################################################
@@ -983,7 +987,7 @@ class Gaussian_Quadrature:
 
 
 
-def monte_carlo_integrate(f: float,a: float,b: float,N: int,seed: int,multiplier: float,m: float,c: float):
+def monte_carlo_integrate(f: float,a: float,b: float,N: int,seed: int,multiplier=1103515245,m=32768,c=12345):
     '''
     # Monte Carlo Integration
     ## Parameters
