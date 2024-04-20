@@ -1,0 +1,217 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{dcolumn}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=1.5cm,right=1.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage{multicol}
+\setlength{\columnsep}{0.5cm}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=cyan,}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{layout}
+\usepackage{bm}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+
+
+
+\begin{document}
+
+
+
+
+
+
+
+
+
+
+%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage
+\thispagestyle{empty}
+\baselineskip25pt
+\begin{center}
+{\Large {\textbf{Solution of Quantum Harmonic Oscillator in Different Types of Potential and one dimentional DFT Code}}}\\
+\end{center}
+
+\vfill
+\baselineskip15pt
+\begin{center}
+{\em Computational Physics Term Project Report Submitted} \\
+in Partial Fulfilment of the Requirements \\
+for the course \
+\vskip .30\baselineskip
+{\large{\bf P52-Computational Physics}}
+\end{center}
+\baselineskip25pt
+
+\vfill
+\begin{center} {\bf {\em by}} \\
+{\large{\bf ANANTHA PADMANABHAN M NAIR}} \\
+Course Instructors:\\
+\textbf{Dr. Subashis Basak\\
+Dr. Prasanjit Samal}
+\end{center}
+
+\vfill
+\begin{center}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{Images/logo1.jpg}
+\end{figure}
+ {\bf {\em to the }} \\
+{\bf {\large School of Physical Sciences}} \\
+{\bf {\large National Institute of Science Education and Research}} \\
+{\bf Bhubaneswar} \\
+{\bf \today} 
+\end{center}
+%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%TitlePage%
+
+
+
+
+
+
+
+
+
+
+%Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page
+\pagenumbering{roman}
+\newpage
+\newgeometry{top=2.5cm,bottom=2.5cm,left=3.5cm,right=3.5cm}
+\begin{center}
+ \tableofcontents  
+ \newpage
+ \listoffigures
+ \listoftables 
+\end{center}
+\restoregeometry
+%Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page
+
+
+
+\newpage
+\begin{center}
+    \large{\textbf{CALCULATION OF MUON LIFE TIME USING SCINTILLATOR DETECTOR \\ AND CHERENKOV RADIATION WITH TEACHSPIN SETUP}}
+\end{center}
+\begin{abstract}
+    We use Python to conduct a thorough investigation of the one-dimensional quantum harmonic oscillator (QHO) and its extensions in this computational physics research. We commence with the fundamental concepts of quantum physics and delve into the behavior of the QHO by calculating its eigenvalues and eigenvectors, offering a firm grasp of its inherent attributes. We then introduce other potentials, including the Hartree, Coulomb, and B88 potentials, and examine how they affect the energy spectrum and wavefunctions of the QHO system. By using numerical methods, such as the discrete Fourier transform (DFT), we examine how the system behaves in various potential landscapes and boundary conditions, providing new insights into its dynamics. Python has proven to be an effective and versatile tool for simulation and analysis during our examination, allowing for the flexible and efficient study of intricate quantum processes. This study advances our knowledge of quantum systems and their behavior in a variety of possible contexts by fusing theoretical ideas with computational techniques. It also provides insightful information for future research in quantum mechanics and computational physics.
+\end{abstract}
+\begin{multicols}{2}
+\pagenumbering{arabic}
+
+
+
+
+
+
+\section{\label{intro}Introduction}
+One of the key pillars of quantum mechanics, the quantum harmonic oscillator (QHO) provides deep insights into the behavior of quantum systems and paves the way for many developments in theoretical physics and quantum computing. The QHO, which was first proposed in the early 20th century, became a key idea in the growth of quantum theory and completely changed our knowledge of particle motion and energy quantization.
+
+The QHO model is based on the fundamentals of classical mechanics, in which a particle is subjected to a harmonic potential with a displacement from equilibrium that has a quadratic energy dependency. However, the Schrödinger equation, which defines the system's wavefunction evolution, governs the QHO's dynamics in quantum mechanics. We get a discrete spectrum of energy levels from the solutions to this equation, each of which is connected to a particular wavefunction or system eigenstate. These eigenstates provide a comprehensive description of the QHO's quantum mechanical behavior by forming an orthonormal basis spanning its Hilbert space.
+
+We introduce the Python programming language as our main tool for numerical simulations and analysis, moving from theory to practice. Python's ease of use and readability enable academics from a variety of backgrounds to collaborate and share knowledge within the scientific community. We give a quick rundown of the main Python functionalities and study-relevant libraries, such as Matplotlib for data visualization, SciPy for scientific computing, and NumPy for numerical computations.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\label{theory}Theory and Background}
+
+The main theory of this project revolves aroud the Schrodinger equation and its solution. The Schrodinger equation is given by:
+\begin{equation}
+    \hat{H}\psi = E\psi
+\end{equation}
+
+where $\hat{H}$ is the Hamiltonian operator, $\psi$ is the wavefunction and $E$ is the energy of the system. The differential form of the Schrodinger equation is given by:
+\begin{equation}
+    \hat{H}\psi = -\frac{\hbar^2}{2m}\nabla^2\psi + V(x,t)\psi = E\psi
+\end{equation}
+
+for our case we will restrict to the case where $V(x,t) = V(x)$ where the potentals depend only on the position of the particle. In uor study we will consider the case of a Quantum harmonic Oscillator. where the potential is given by:
+\begin{equation}
+    V(x) = \frac{1}{2}m\omega^2r^2
+\end{equation}
+where $\omega$ is the frequency of the oscillator, m is the mass of the particle and r is the distance from the equilibrium position. In our case we will consider the units where $\hbar = 1$ and $m = 1$. So the Hamiltonian operator for the QHO is given by:
+\begin{equation}
+    \hat{H} = -\frac{1}{2}\nabla^2 + \frac{1}{2}r^2
+\end{equation}
+
+From here we will add few additional potentials to the QHO and study the effect of these potentials on the energy spectrum and wavefunctions of the system. 
+The problems that we are focusing on are:
+\begin{itemize}
+    \item Quantum Harmonic Oscillator
+    \item Quantum Harmonic Oscillator half harmonic potential
+    \item Quantum Harmonic Oscillator in soft Coulomb Potential
+    \item 2-Dimentional Harmonic Oscillator
+\end{itemize}
+
+
+\subsection{\label{QHO}Quantum Harmonic Oscillator}
+Here we will be solving the differential equation given by:
+\begin{equation}
+    -\frac{1}{2}\frac{d^2\psi}{dx^2} + \frac{1}{2}x^2\psi = E\psi
+\end{equation}
+
+The potental is defined in the range of $-\infty$ to $\infty$. The solution to this differential equation is given by the Hermite polynomials. which is already calculated.
+Proper solutions exist for this  differential equation iff its Energy is one of the allowed values. The allowed values of the energy is calculated by the eigenvalue of the Hamiltonian operator where the H is represented as a matrix.
+
+\subsection{\label{QHOHP}Quantum Harmonic Oscillator half harmonic potential}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\label{expsetup}Numerical Proedures and Computational Setup}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\label{observations}Results and Solutions}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\label{Conclusion}Conclusion and Discussions}
+
+hihi-\cite{ROOT}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{multicols}
+\bibliographystyle{plain}
+\bibliography{bib.bib}
+
+
+\end{document}
