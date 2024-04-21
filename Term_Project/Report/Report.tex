@@ -423,8 +423,79 @@ where $\frac{d\vec{y}}{dx}$ represents the set of equations $\{ y_1(y_1,y_2,y3,.
 This is done in a loop for the required number of steps ans convergence. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\label{observations}Results and Solutions}
+\section{\label{observations}Solutions to the Quantum Harmonic Oscillator Problem}
 
+
+The obtained results of the solution of QHO schrodinger equation are shown below. The energy levels and the wavefunctions are plotted for the QHO, QHO with half harmonic potential and QHO with soft Coulomb potential and the rest are shown in the coming sections.
+
+
+\subsection{\label{QHO_1}Particle in Harmonic Potential}
+
+The Plot of the usual harmonic oscillator is shown in the figure-\ref{usualqho}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/usual_QHO.png}
+    \caption{Energy levels and wavefunctions of the Quantum Harmonic Oscillator for n = 0 to 2-\cite{python}}
+    \label{usualqho}
+\end{figure}
+
+Here we can see the eigrnvalues of energy and the eigenvectors. This problem is analytically solved and we know that their solutions are hermite polynomials. In the figure, only the first 3 states are shown. These values of the energies that is $E_0 = 0.5$, $E_1 = 1.5$ and $E_2 = 2.5$, we will be using in the 2D-QHO Problem.
+
+
+
+
+\subsection{Particle in Half Harmonic Potential}
+
+The Plot of the QHO with half harmonic potential is shown in the figure-\ref{halfqho}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/half_harmonic.png}
+    \caption{Solutions to the half harmonic potential problem in QM}
+    \label{halfqho}
+\end{figure}
+
+Here we can se that only the solutions of the usual QHO which has the wave function value 0 at the point x=0 are allowed.
+
+
+\subsection{Particle in Soft Coulomb Potential}
+
+
+The Plot of the QHO in soft Coulomb potential is shown in the figure-\ref{coulombqho}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/soft_coulomb.png}
+    \caption{Solutions to the QHO in soft Coulomb potential}
+    \label{coulombqho}
+\end{figure}
+
+Here we can see that the change in the Energy of the states and the wavefunctions of the system. The energy levels are shifted and the wavefunctions are also changed.The wavefunctions are more spread out in the case of the soft Coulomb potential. This is due to the fact that the potential is more spread out in the case of the soft Coulomb potential.
+
+
+\subsection{One dimentional DFT Problem with LDA potential and Hartree Energy}
+
+
+
+The plot of the number density for 17 electrons in the 1D DFT problem is shown in the figure-\ref{numden}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/density.png}
+    \caption{Number density n(x) of the electrons in the 1D DFT problem. The number of electrons used here is 17}
+    \label{numden}
+\end{figure}
+
+The plot of the Solutions to the 1D DFT problem with LDA potental and Exchange Energy is shown in the figure-\ref{1d_dft}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/1DDFT.png}
+    \caption{Solutions to the 1D DFT problem with LDA potential and Exchange Energy}
+    \label{1d_dft}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
