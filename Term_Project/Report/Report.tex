@@ -18,9 +18,10 @@
 \usepackage{float}
 \usepackage{layout}
 \usepackage{bm}
-
+\usepackage{wrapfig}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{lipsum}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -46,7 +47,7 @@
 \lstset{style=mystyle}
 
 
-
+\input{insbox}
 
 
 \begin{document}
@@ -64,7 +65,7 @@
 \thispagestyle{empty}
 \baselineskip25pt
 \begin{center}
-{\Large {\textbf{TitleTitleTitleTitleTitleTitleTitleTitleTitle \\Title}}}\\
+{\Large {\textbf{Numerical QM of QHO with soft coulomb and other effective Multi-Particle interaction}}}\\
 \end{center}
 
 \vfill
@@ -74,7 +75,7 @@
 in Partial Fulfilment of the Requirements \\
 for the course \
 \vskip .30\baselineskip
-{\large{\bf P52-Computational Physics}}
+{\large{\bf P452-Computational Physics}}
 \end{center}
 \baselineskip25pt
 
@@ -82,7 +83,7 @@ for the course \
 \begin{center} {\bf {\em by}} \\
 {\large{\bf ANANTHA PADMANABHAN M NAIR}} \\
 Course Instructors:\\
-\textbf{Dr. Subashis Basak\\
+\textbf{Dr. Subhasish Basak\\
 Dr. Prasanjit Samal}
 \end{center}
 
@@ -117,7 +118,7 @@ Dr. Prasanjit Samal}
  \tableofcontents  
  \newpage
  \listoffigures
- \listoftables 
+ %\listoftables 
 \end{center}
 \restoregeometry
 %Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page%Content Table Page
@@ -126,10 +127,10 @@ Dr. Prasanjit Samal}
 
 \newpage
 \begin{center}
-    \large{\textbf{TitleTitleTitleTitleTitleTitleTitle \\Title}}
+    \large{\textbf{Numerical QM of QHO with soft coulomb and other effective Multi-particle interaction}}
 \end{center}
 \begin{abstract}
-    We use Python to conduct a thorough investigation of the one-dimensional quantum harmonic oscillator (QHO) and its extensions in this computational physics research. We commence with the fundamental concepts of quantum physics and delve into the behavior of the QHO by calculating its eigenvalues and eigenvectors, offering a firm grasp of its inherent attributes. We then introduce other potentials, including the Hartree, Coulomb, and B88 potentials, and examine how they affect the energy spectrum and wavefunctions of the QHO system. By using numerical methods, such as the discrete Fourier transform (DFT), we examine how the system behaves in various potential landscapes and boundary conditions, providing new insights into its dynamics. Python has proven to be an effective and versatile tool for simulation and analysis during our examination, allowing for the flexible and efficient study of intricate quantum processes. This study advances our knowledge of quantum systems and their behavior in a variety of possible contexts by fusing theoretical ideas with computational techniques. It also provides insightful information for future research in quantum mechanics and computational physics.
+    We use Python to conduct a thorough investigation of the one-dimensional quantum harmonic oscillator (QHO) and its extensions in this computational physics research. We commence with the fundamental concepts of quantum physics and delve into the behavior of the QHO by calculating its eigenvalues and eigenvectors, offering a firm grasp of its inherent attributes. We then introduce other potentials, including the Hartree, and soft Coulomb, and examine how they affect the energy spectrum and wavefunctions of the QHO system. By using numerical methods, such as the KS-Algorithm-\cite{DFTpaper}, we examine how the system behaves in various potential landscapes and boundary conditions, providing new insights into its dynamics. Python has proven to be an effective and versatile tool for simulation and analysis during our examination, allowing for the flexible and efficient study of intricate quantum processes. This study advances our knowledge of quantum systems and their behavior in a variety of possible contexts by fusing theoretical ideas with computational techniques. It also provides insightful information for future research in quantum mechanics and computational physics.
 \end{abstract}
 \begin{multicols}{2}
 \pagenumbering{arabic}
@@ -362,7 +363,7 @@ The Eigen values and Eigen vectors are obtained using the  function \texttt{np.l
 
 \subsection{For the One dimentional DFT Problem}
 
-For the One dimentional DFT problem we will be implementing the Kaun-Sham equations. A similar approach for the calculation of the hamiltonian is taken as in the previous case. The electron density is calculated using the wavefunctions and the exchange potential is calculated using the electron density. The exchange potential is then used to calculate the exchange energy. The Hartree potential is calculated using the electron density and the Hartree energy is calculated using the Hartree potential. The total energy is then calculated using the exchange energy and the Hartree energy. Here we have used a sef consistancy loop for the calculation of the solution of the wavefunctions. The self consistancy code is given below: (Here the hartree potentials and the exchange potentials are calculated. only the self consistancy loop is shown here)
+For the One dimentional DFT problem we will be implementing the Kaun-Sham equations. A similar approach for the calculation of the hamiltonian is taken as in the previous case. The electron density-\cite{vilhena2014construction} is calculated using the wavefunctions and the exchange potential is calculated using the electron density. The exchange potential is then used to calculate the exchange energy. The Hartree potential is calculated using the electron density and the Hartree energy is calculated using the Hartree potential. The total energy is then calculated using the exchange energy and the Hartree energy. Here we have used a sef consistancy loop for the calculation of the solution of the wavefunctions. The self consistancy code is given below: (Here the hartree potentials and the exchange potentials are calculated. only the self consistancy loop is shown here)
 
 \begin{lstlisting}{language = Python}
     nx = np.zeros(n)
@@ -437,7 +438,7 @@ The Plot of the usual harmonic oscillator is shown in the figure-\ref{usualqho}
 \begin{figure}[H]
     \centering
     \includegraphics[width = \columnwidth]{Images/usual_QHO.png}
-    \caption{Energy levels and wavefunctions of the Quantum Harmonic Oscillator for n = 0 to 2-\cite{python}}
+    \caption{Energy levels and wavefunctions of the Quantum Harmonic Oscillator for n = 0 to 2-\cite{python}-\cite{SciencePlots}}
     \label{usualqho}
 \end{figure}
 
@@ -498,11 +499,62 @@ The plot of the Solutions to the 1D DFT problem with LDA potental and Exchange E
 \end{figure}
 
 
+\subsection{2-Dimentional Harmonic Oscillator}
+
+For the sake of verification, one dimentional harmonic oscillator is solved uding the RK4-Algorithm and is shown in the figure-\ref{1d-ver}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/1d_ver.png}
+    \caption{Solutions to the 1D Harmonic Oscillator with $E = 2.5$ using RK4 Algorithm}
+    \label{1d-ver}
+\end{figure}
+
+
+Now, taking the 2-Dimentional Harmonic Oscillator with total Energy of 10, with $E_x = 5.5$ and $E_y = 4.5$ the Solutions for the x-direction is shown in figure -\ref{2dex} and y-direction is shown in figure-\ref{2dey}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/2dex.png}
+    \caption{Solutions to the 2D Harmonic Oscillator in x-direction with $E_x = 5.5$}
+    \label{2dex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/2dey.png}
+    \caption{Solutions to the 2D Harmonic Oscillator in y-direction with $E_y = 4.5$}
+    \label{2dey}
+\end{figure}
+
+
+
+Since its has x,y, and $\Psi(x,y)$ we will have to use a heat map to show the wavefunction of the 2-D Harmonic Oscillator. The heat map of the 2-D Harmonic Oscillator is shown in the figure-\ref{2d}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = \columnwidth]{Images/2dqhosoln.png}
+    \caption{Heat map of the 2D Harmonic Oscillator}
+    \label{2d}
+\end{figure}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\label{Conclusion}Conclusion and Discussions}
 
-hihi-\cite{ROOT}
+Based on the analysis and results presented in this report, several conclusions can be drawn.
+
+Firstly, for the Quantum Harmonic Oscillator (QHO), it is evident that only solutions with wave function values of zero at x=0 are allowed when the harmonic potential is present for positive values of x. Additionally, when the QHO is subjected to a soft Coulomb potential, the energy levels are shifted and the wavefunctions become more spread out. This is due to the broader spatial distribution of the potential in the soft Coulomb case.
+
+Moving on to the one-dimensional Density Functional Theory (DFT) problem, the number density of electrons exhibits distinct patterns, as shown in Figure \ref{numden}. The solutions to the DFT problem with LDA potential and Exchange Energy, depicted in Figure \ref{1d_dft}, further demonstrate the influence of these factors on the electron distribution.
+
+Furthermore, the analysis extends to the two-dimensional Harmonic Oscillator, where the solutions in the x and y directions are presented in Figures \ref{2dex} and \ref{2dey}, respectively. The heat map in Figure \ref{2d} provides a comprehensive visualization of the wavefunction of the 2D Harmonic Oscillator.
+
+In conclusion, this report highlights the behavior and properties of various physical systems, including the Quantum Harmonic Oscillator, the one-dimensional DFT problem, and the two-dimensional Harmonic Oscillator. The results demonstrate the impact of different potentials and energies on the energy levels, wavefunctions, and electron distributions. These findings contribute to a deeper understanding of quantum systems and provide valuable insights for further research and applications in computational physics.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
