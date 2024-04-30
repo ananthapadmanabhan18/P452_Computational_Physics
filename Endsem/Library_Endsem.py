@@ -1850,8 +1850,8 @@ def linear_fit(xlist: list,ylist: list,elist: list):
         raise ValueError('The length of xlist, ylist, and elist must be the same')
     
     # If elist is False, assume that the error is 1 for all data points
-    if elist == False:
-        elist = [1]*len(xlist)
+    # if elist == False:
+    #     elist = [1]*len(xlist)
     # Convert the lists to numpy arrays
     xlist = np.array(xlist)
     ylist = np.array(ylist)
@@ -1871,13 +1871,13 @@ def linear_fit(xlist: list,ylist: list,elist: list):
     intercept=(Sxx*Sy-Sx*Sxy)/Delta
     slope=(S*Sxy-Sx*Sy)/Delta
     # Calculate the error in the slope and intercept
-    # error_intercept = np.sqrt(Sxx/Delta)
-    # error_slope = np.sqrt(S/Delta)
+    error_intercept = np.sqrt(Sxx/Delta)
+    error_slope = np.sqrt(S/Delta)
     # cov = -Sx/Delta
     # Pearsen's correlation coefficient
     r_sq = Sxy/np.sqrt(Sxx*Syy) 
 
-    return slope,intercept,np.sqrt(r_sq)
+    return slope,intercept,error_slope,error_intercept,r_sq
 
 
 
